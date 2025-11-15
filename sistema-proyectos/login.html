@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Gestión de Proyectos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div id="login-form-container">
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <h2>🔐 Iniciar Sesión</h2>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required placeholder="usuario@proyectos.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+
+                <button type="submit">🚀 Ingresar al Sistema</button>
+
+                <div class="login-demo">
+                    <h4>Credenciales de Demo:</h4>
+                    <p><strong>Administrador:</strong> admin@proyectos.com / admin123</p>
+                    <p><strong>Estudiante:</strong> estudiante@proyectos.com / est123</p>
+                    <p><strong>Responsable:</strong> responsable@proyectos.com / resp123</p>
+                    <p><strong>Revisor:</strong> revisor@proyectos.com / rev123</p>
+                    <p><strong>Usuario Público:</strong> usuario@proyectos.com / user123</p>
+                </div>
+
+                <p style="text-align: center; margin-top: 1rem;">
+                    <a href="index.html">← Volver al inicio</a>
+                </p>
+            </form>
+
+            <div id="register-form" style="display: none;">
+                <form onsubmit="handleRegister(event)">
+                    <h2>👤 Registrar Nuevo Usuario</h2>
+
+                    <div class="form-group">
+                        <label for="reg-nombre">Nombre completo:</label>
+                        <input type="text" id="reg-nombre" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email">Email:</label>
+                        <input type="email" id="reg-email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password">Contraseña:</label>
+                        <input type="password" id="reg-password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-rol">Rol:</label>
+                        <select id="reg-rol" required>
+                            <option value="usuario">Usuario</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">📝 Registrar Usuario</button>
+                    <button type="button" onclick="mostrarLogin()">← Volver al Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/periodos-academicos.js"></script>
+    <script src="js/asignacion-revisores.js"></script>
+    <script src="js/notifications-queue.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

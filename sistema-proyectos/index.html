@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Proyectos - 21 Casos de Uso</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1>🚀 Sistema de Gestión de Proyectos</h1>
+            <nav>
+                <a href="#" onclick="cargarDashboard()">📊 Dashboard</a>
+                <a href="#" onclick="cargarProyectos()">📋 Proyectos</a>
+                <a href="#" onclick="cargarRevisiones()">🔍 Revisiones</a>
+                <a href="#" onclick="cargarNotificaciones()">🔔 Notificaciones</a>
+                <a href="#" onclick="cargarAdministracion()">⚙️ Administración</a>
+                <div class="user-info" id="user-info">
+                    <span>Invitado</span>
+                    <a href="login.html" class="logout-btn">🔐 Login</a>
+                </div>
+            </nav>
+        </header>
+
+        <main id="main-content">
+            <div class="welcome-section" id="welcome-section">
+                <h2>Bienvenido al Sistema de Gestión de Proyectos</h2>
+                <p>Gestiona tus proyectos de manera eficiente - 21 Casos de Uso Implementados</p>
+                <div class="welcome-actions">
+                    <button onclick="cargarProyectos()">🚀 Comenzar con Proyectos</button>
+                    <button onclick="cargarDashboard()">📊 Ver Dashboard</button>
+                    <a href="login.html" class="login-btn">🔐 Iniciar Sesión</a>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>📋 Gestión de Proyectos</h3>
+                        <p>Crear, editar, eliminar y gestionar proyectos completos</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔍 Sistema de Revisiones</h3>
+                        <p>Revisar, aprobar y comentar sobre el progreso</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔔 Notificaciones</h3>
+                        <p>Mantente informado de todos los cambios</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>⚙️ Administración</h3>
+                        <p>Gestiona usuarios y genera reportes</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="cerrarModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="js/periodos-academicos.js"></script>
+    <script src="js/asignacion-revisores.js"></script>
+    <script src="js/notifications-queue.js"></script>
+    <script src="js/app.js"></script>
+
+    <script src="js/auth.js"></script>
+    <script src="js/proyectos.js"></script>
+    <script src="js/revisiones.js"></script>
+    <script src="js/administracion.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/angular-components.js"></script>
+    <script src="js/estudiantes.js"></script>
+    <script src="js/auditoria-proyectos.js"></script>
+    <script src="js/historial-completo.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            actualizarInfoUsuario();
+        });
+
+        function cargarDashboard() {
+            const mainContent = document.getElementById('main-content');
+            const welcomeSection = document.getElementById('welcome-section');
+
+            if (welcomeSection) {
+                welcomeSection.style.display = 'none';
+            }
+
+            if (sistema.usuarioActual) {
+                switch (sistema.usuarioActual.rol) {
+                    case 'estudiante':
+                        cargarDashboardEstudiante();
+                        break;
+
+                    case 'admin':
+                        cargarDashboardAdministrador();
+                        break;
+
+                    case 'responsable':
+                        cargarDashboardResponsable();
+                        break;
+
+                    case 'revisor':
+                        cargarDashboardRevisor();
+                        break;
+
+                    default:
+                        cargarDashboardGeneral();
+                        break;
+                }
+            } else {
+                // Si no hay usuario logueado, mostrar dashboard público
+                cargarDashboardPublico();
+            }
+        }
+
+        // ===== DASHBOARDS ESPECÍFICOS POR ROL =====
+
+        // Dashboard para Administrador
+        function cargarDashboardAdministrador() {
+            const mainContent = document.getElementById('main-content');
+            const proyectos = sistema.proyectos;
+            const usuarios = sistema.usuarios;
+            const notificaciones = sistema.obtenerNotificacionesUsuario(sistema.usuarioActual.id);
+
+            mainContent.innerHTML = `
+        <div class="dashboard">
+            <h2>⚙️ Panel de Administrador</h2>
+            
+            <div class="welcome-banner">
+                <h3>¡Bienvenido, Administrador ${sistema.usuarioActual.nombre}!</h3>
+                <p>Tienes control total sobre el sistema</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card" onclick="cargarProyectos()" style="cursor: pointer;">
+                    <h3>📋 Total Proyectos</h3>
+                    <p>${proyectos.length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarAdministracion()" style="cursor: pointer;">
+                    <h3>👥 Total Usuarios</h3>
+                    <p>${usuarios.length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarAdministracion()" style="cursor: pointer;">
+                    <h3>🔍 Revisiones Activas</h3>
+                    <p>${sistema.revisiones.filter(r => r.estado === 'pendiente').length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarAdministracion()" style="cursor: pointer;">
+                    <h3>📊 Reportes</h3>
+                    <p>${sistema.revisiones.length}</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-sections">
+                <div class="dashboard-section">
+                    <h3>🚀 Acciones Rápidas</h3>
+                    <div class="acciones-rapidas">
+                        <button onclick="mostrarFormularioNuevoUsuario()" class="btn-primary">➕ Nuevo Usuario</button>
+                        <button onclick="generarReporteProyectos()" class="btn-secondary">📊 Generar Reporte</button>
+                        <button onclick="cargarAdministracion()" class="btn-info">⚙️ Panel Admin</button>
+                    </div>
+                </div>
+                
+                <div class="dashboard-section">
+                    <h3>🔔 Notificaciones Recientes</h3>
+                    <div class="notificaciones-recientes">
+                        ${notificaciones.slice(0, 5).map(notif => `
+                            <div class="notificacion-mini ${notif.leida ? 'leida' : 'nueva'}">
+                                <strong>${notif.titulo}</strong>
+                                <p>${notif.mensaje}</p>
+                                <small>${new Date(notif.fecha).toLocaleDateString()}</small>
+                            </div>
+                        `).join('')}
+                        ${notificaciones.length === 0 ? '<p class="sin-notificaciones">No hay notificaciones</p>' : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+        }
+
+        // Dashboard para Responsable de Proyecto
+        function cargarDashboardResponsable() {
+            const mainContent = document.getElementById('main-content');
+            const proyectosResponsable = sistema.proyectos.filter(p =>
+                p.responsableId === sistema.usuarioActual.id
+            );
+            const notificaciones = sistema.obtenerNotificacionesUsuario(sistema.usuarioActual.id);
+
+            mainContent.innerHTML = `
+        <div class="dashboard">
+            <h2>👨‍💼 Panel del Responsable</h2>
+            
+            <div class="welcome-banner">
+                <h3>¡Bienvenido, ${sistema.usuarioActual.nombre}!</h3>
+                <p>Gestiona los proyectos bajo tu responsabilidad</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card" onclick="cargarProyectos()" style="cursor: pointer;">
+                    <h3>📋 Mis Proyectos</h3>
+                    <p>${proyectosResponsable.length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarProyectos()" style="cursor: pointer;">
+                    <h3>🚀 En Progreso</h3>
+                    <p>${proyectosResponsable.filter(p => p.estado === 'en_progreso').length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarProyectos()" style="cursor: pointer;">
+                    <h3>✅ Completados</h3>
+                    <p>${proyectosResponsable.filter(p => p.estado === 'completado').length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarRevisiones()" style="cursor: pointer;">
+                    <h3>🔍 Revisiones</h3>
+                    <p>${sistema.revisiones.filter(r =>
+                proyectosResponsable.some(p => p.id === r.proyectoId)
+            ).length}</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-sections">
+                <div class="dashboard-section">
+                    <h3>📋 Mis Proyectos Recientes</h3>
+                    <div class="proyectos-recientes">
+                        ${proyectosResponsable.slice(0, 5).map(proyecto => `
+                            <div class="proyecto-mini">
+                                <h4>${proyecto.titulo}</h4>
+                                <span class="estado-mini ${proyecto.estado}">${proyecto.estado}</span>
+                                <span class="progreso-mini">${proyecto.progreso}%</span>
+                                <button onclick="editarProyecto(${proyecto.id})" class="btn-small">✏️</button>
+                            </div>
+                        `).join('')}
+                        ${proyectosResponsable.length === 0 ?
+                    '<p>No tienes proyectos asignados.</p>' :
+                    '<button onclick="cargarProyectos()">Ver todos mis proyectos</button>'
+                }
+                    </div>
+                </div>
+                
+                <div class="dashboard-section">
+                    <h3>🔔 Notificaciones</h3>
+                    <div class="notificaciones-recientes">
+                        ${notificaciones.slice(0, 5).map(notif => `
+                            <div class="notificacion-mini ${notif.leida ? 'leida' : 'nueva'}">
+                                <strong>${notif.titulo}</strong>
+                                <p>${notif.mensaje}</p>
+                                <small>${new Date(notif.fecha).toLocaleDateString()}</small>
+                            </div>
+                        `).join('')}
+                        ${notificaciones.length === 0 ? '<p class="sin-notificaciones">No hay notificaciones</p>' : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+        }
+
+        // Dashboard para Revisor
+        function cargarDashboardRevisor() {
+            const mainContent = document.getElementById('main-content');
+            const revisionesPendientes = sistema.revisiones.filter(r =>
+                r.revisorId === sistema.usuarioActual.id && r.estado === 'pendiente'
+            );
+            const notificaciones = sistema.obtenerNotificacionesUsuario(sistema.usuarioActual.id);
+
+            mainContent.innerHTML = `
+        <div class="dashboard">
+            <h2>🔍 Panel del Revisor</h2>
+            
+            <div class="welcome-banner">
+                <h3>¡Bienvenido, ${sistema.usuarioActual.nombre}!</h3>
+                <p>Revisa y evalúa los trabajos del equipo</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card" onclick="cargarRevisiones()" style="cursor: pointer;">
+                    <h3>📋 Revisiones Pendientes</h3>
+                    <p>${revisionesPendientes.length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarRevisiones()" style="cursor: pointer;">
+                    <h3>✅ Revisiones Completadas</h3>
+                    <p>${sistema.revisiones.filter(r =>
+                r.revisorId === sistema.usuarioActual.id && r.estado !== 'pendiente'
+            ).length}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>📊 Proyectos Revisados</h3>
+                    <p>${new Set(sistema.revisiones
+                .filter(r => r.revisorId === sistema.usuarioActual.id)
+                .map(r => r.proyectoId)
+            ).size}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>⭐ Calificaciones</h3>
+                    <p>${sistema.revisiones.filter(r =>
+                r.revisorId === sistema.usuarioActual.id && r.estado === 'aprobada'
+            ).length}</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-sections">
+                <div class="dashboard-section">
+                    <h3>📝 Revisiones Pendientes</h3>
+                    <div class="revisiones-pendientes">
+                        ${revisionesPendientes.slice(0, 5).map(revision => {
+                const proyecto = sistema.getProyecto(revision.proyectoId);
+                return `
+                                <div class="revision-mini">
+                                    <h4>${proyecto?.titulo || 'Proyecto no encontrado'}</h4>
+                                    <p><strong>Tipo:</strong> ${revision.tipo}</p>
+                                    <small>${new Date(revision.fechaCreacion).toLocaleDateString()}</small>
+                                    <button onclick="verDetallesRevision(${revision.id})" class="btn-small">👁️ Revisar</button>
+                                </div>
+                            `;
+            }).join('')}
+                        ${revisionesPendientes.length === 0 ?
+                    '<p>No tienes revisiones pendientes.</p>' :
+                    '<button onclick="cargarRevisiones()">Ver todas las revisiones</button>'
+                }
+                    </div>
+                </div>
+                
+                <div class="dashboard-section">
+                    <h3>🔔 Notificaciones</h3>
+                    <div class="notificaciones-recientes">
+                        ${notificaciones.slice(0, 5).map(notif => `
+                            <div class="notificacion-mini ${notif.leida ? 'leida' : 'nueva'}">
+                                <strong>${notif.titulo}</strong>
+                                <p>${notif.mensaje}</p>
+                                <small>${new Date(notif.fecha).toLocaleDateString()}</small>
+                            </div>
+                        `).join('')}
+                        ${notificaciones.length === 0 ? '<p class="sin-notificaciones">No hay notificaciones</p>' : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+        }
+
+        // Dashboard General (para usuarios sin rol específico)
+        function cargarDashboardGeneral() {
+            const mainContent = document.getElementById('main-content');
+            const proyectos = sistema.proyectos;
+            const notificaciones = sistema.obtenerNotificacionesUsuario(sistema.usuarioActual?.id);
+            const revisionesPendientes = sistema.revisiones.filter(r => r.estado === 'pendiente').length;
+
+            mainContent.innerHTML = `
+        <div class="dashboard">
+            <h2>📊 Dashboard Principal</h2>
+            
+            <div class="welcome-banner">
+                <h3>¡Bienvenido, ${sistema.usuarioActual?.nombre || 'Invitado'}!</h3>
+                <p>Sistema de Gestión de Proyectos - 21 Casos de Uso Implementados</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card" onclick="cargarProyectos()" style="cursor: pointer;">
+                    <h3>📋 Total Proyectos</h3>
+                    <p>${proyectos.length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarProyectos()" style="cursor: pointer;">
+                    <h3>🚀 En Progreso</h3>
+                    <p>${proyectos.filter(p => p.estado === 'en_progreso').length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarProyectos()" style="cursor: pointer;">
+                    <h3>✅ Completados</h3>
+                    <p>${proyectos.filter(p => p.estado === 'completado').length}</p>
+                </div>
+                <div class="stat-card" onclick="cargarRevisiones()" style="cursor: pointer;">
+                    <h3>🔍 Revisiones Pendientes</h3>
+                    <p>${revisionesPendientes}</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-sections">
+                <div class="dashboard-section">
+                    <h3>📋 Proyectos Recientes</h3>
+                    <div class="proyectos-recientes">
+                        ${proyectos.slice(0, 5).map(proyecto => `
+                            <div class="proyecto-mini">
+                                <h4>${proyecto.titulo}</h4>
+                                <span class="estado-mini ${proyecto.estado}">${proyecto.estado}</span>
+                                <span class="progreso-mini">${proyecto.progreso}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="cargarProyectos()">Ver todos los proyectos</button>
+                </div>
+                
+                <div class="dashboard-section">
+                    <h3>🔔 Notificaciones Recientes</h3>
+                    <div class="notificaciones-recientes">
+                        ${notificaciones.slice(0, 5).map(notif => `
+                            <div class="notificacion-mini ${notif.leida ? 'leida' : 'nueva'}">
+                                <strong>${notif.titulo}</strong>
+                                <p>${notif.mensaje}</p>
+                                <small>${new Date(notif.fecha).toLocaleDateString()}</small>
+                            </div>
+                        `).join('')}
+                        ${notificaciones.length === 0 ? '<p class="sin-notificaciones">No hay notificaciones</p>' : ''}
+                    </div>
+                    <button onclick="cargarNotificaciones()">Ver todas las notificaciones</button>
+                </div>
+            </div>
+        </div>
+    `;
+        }
+
+        // Dashboard Público (para usuarios no logueados)
+        function cargarDashboardPublico() {
+            const mainContent = document.getElementById('main-content');
+
+            mainContent.innerHTML = `
+        <div class="dashboard-publico">
+            <h2>🚀 Sistema de Gestión de Proyectos</h2>
+            
+            <div class="welcome-banner">
+                <h3>Bienvenido al Sistema</h3>
+                <p>Gestiona tus proyectos de manera eficiente - 21 Casos de Uso Implementados</p>
+                <a href="login.html" class="btn-primary">🔐 Iniciar Sesión</a>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>👨‍💼 Para Responsables</h3>
+                    <p>Crea y gestiona proyectos, asigna equipos y supervisa el progreso</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎓 Para Estudiantes</h3>
+                    <p>Sube entregas, revisa calificaciones y recibe feedback</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔍 Para Revisores</h3>
+                    <p>Evalúa trabajos, proporciona feedback y aprueba entregas</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚙️ Para Administradores</h3>
+                    <p>Gestiona usuarios, genera reportes y supervisa el sistema</p>
+                </div>
+            </div>
+            
+            <div class="demo-credentials">
+                <h4>🔑 Credenciales de Demo:</h4>
+                <div class="credentials-grid">
+                    <div class="credential-item">
+                        <strong>Administrador:</strong><br>
+                        admin@proyectos.com / admin123
+                    </div>
+                    <div class="credential-item">
+                        <strong>Estudiante:</strong><br>
+                        estudiante@proyectos.com / est123
+                    </div>
+                    <div class="credential-item">
+                        <strong>Responsable:</strong><br>
+                        responsable@proyectos.com / resp123
+                    </div>
+                    <div class="credential-item">
+                        <strong>Revisor:</strong><br>
+                        revisor@proyectos.com / rev123
+                    </div>
+                    <div class="credential-item">
+                        <strong>Usuario Público:</strong><br>
+                        usuario@proyectos.com / user123
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+        }
+
+    </script>
+
+</body>
+
+</html>

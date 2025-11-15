@@ -1,0 +1,188 @@
+{
+    "version": "1.0",
+    "ultimaActualizacion": "2024-10-30T12:00:00.000Z",
+    "estadisticas": {
+        "totalProyectos": 2,
+        "totalUsuarios": 2,
+        "totalRevisiones": 1,
+        "totalNotificaciones": 3
+    },
+    "usuarios": [
+        {
+            "id": 1,
+            "nombre": "Administrador del Sistema",
+            "email": "admin@proyectos.com",
+            "password": "admin123",
+            "rol": "admin",
+            "activo": true,
+            "fechaRegistro": "2024-10-01T08:00:00.000Z",
+            "ultimoAcceso": "2024-10-30T10:30:00.000Z"
+        },
+        {
+            "id": 2,
+            "nombre": "Usuario Demo",
+            "email": "usuario@proyectos.com",
+            "password": "user123",
+            "rol": "usuario",
+            "activo": true,
+            "fechaRegistro": "2024-10-15T09:15:00.000Z",
+            "ultimoAcceso": "2024-10-29T16:45:00.000Z"
+        }
+    ],
+    "proyectos": [
+        {
+            "id": 1,
+            "titulo": "Sistema de Gestión Académica",
+            "descripcion": "Desarrollo de una plataforma web completa para la gestión de estudiantes, profesores, materias y calificaciones en instituciones educativas.",
+            "estado": "en_progreso",
+            "fechaInicio": "2024-10-01",
+            "fechaFin": "2024-12-15",
+            "fechaCreacion": "2024-09-20T14:30:00.000Z",
+            "presupuesto": 50000,
+            "prioridad": "alta",
+            "responsable": "Administrador del Sistema",
+            "responsableId": 1,
+            "creadoPor": 1,
+            "equipo": [
+                1,
+                2
+            ],
+            "progreso": 65,
+            "categoria": "Desarrollo Software",
+            "etiquetas": [
+                "educación",
+                "plataforma web",
+                "gestión"
+            ],
+            "entregables": [
+                "Backend API",
+                "Frontend Angular",
+                "Base de datos",
+                "Documentación"
+            ]
+        },
+        {
+            "id": 2,
+            "titulo": "App Móvil de Delivery",
+            "descripcion": "Aplicación móvil para servicio de comida a domicilio con seguimiento en tiempo real y múltiples métodos de pago.",
+            "estado": "planificacion",
+            "fechaInicio": "2024-11-01",
+            "fechaFin": "2025-02-28",
+            "fechaCreacion": "2024-10-15T10:00:00.000Z",
+            "presupuesto": 75000,
+            "prioridad": "media",
+            "responsable": "Usuario Demo",
+            "responsableId": 2,
+            "creadoPor": 1,
+            "equipo": [
+                2
+            ],
+            "progreso": 0,
+            "categoria": "Desarrollo Móvil",
+            "etiquetas": [
+                "mobile",
+                "delivery",
+                "comida"
+            ],
+            "entregables": [
+                "App iOS",
+                "App Android",
+                "Panel Administrativo",
+                "API Servicios"
+            ]
+        }
+    ],
+    "revisiones": [
+        {
+            "id": 1,
+            "proyectoId": 1,
+            "tipo": "avance",
+            "descripcion": "Revisión del progreso del módulo de estudiantes",
+            "estado": "pendiente",
+            "revisorId": 2,
+            "creadaPor": 1,
+            "fechaCreacion": "2024-10-28T09:00:00.000Z",
+            "fechaProgramada": "2024-11-05T14:00:00.000Z",
+            "comentarios": [
+                {
+                    "autor": "Administrador del Sistema",
+                    "autorId": 1,
+                    "comentario": "Iniciando la revisión del módulo",
+                    "fecha": "2024-10-28T09:00:00.000Z",
+                    "tipo": "inicial"
+                }
+            ],
+            "criterios": [
+                "Código limpio y documentado",
+                "Pruebas unitarias implementadas",
+                "Interfaz de usuario responsive",
+                "Seguridad implementada"
+            ]
+        }
+    ],
+    "notificaciones": [
+        {
+            "id": 1,
+            "tipo": "sistema",
+            "usuarioId": 2,
+            "titulo": "Bienvenido al sistema",
+            "mensaje": "Tu cuenta ha sido creada exitosamente. Ahora puedes acceder a todas las funcionalidades.",
+            "fecha": "2024-10-15T09:15:00.000Z",
+            "leida": true,
+            "accion": "/dashboard"
+        },
+        {
+            "id": 2,
+            "tipo": "proyecto",
+            "usuarioId": 2,
+            "titulo": "Nuevo proyecto asignado",
+            "mensaje": "Has sido asignado al proyecto: Sistema de Gestión Académica",
+            "fecha": "2024-09-20T14:30:00.000Z",
+            "leida": true,
+            "accion": "/proyectos/1"
+        },
+        {
+            "id": 3,
+            "tipo": "revision",
+            "usuarioId": 2,
+            "titulo": "Nueva revisión asignada",
+            "mensaje": "Tienes una nueva revisión pendiente para el proyecto: Sistema de Gestión Académica",
+            "fecha": "2024-10-28T09:00:00.000Z",
+            "leida": false,
+            "accion": "/revisiones/1"
+        }
+    ],
+    "configuracion": {
+        "empresa": {
+            "nombre": "Sistema de Gestión de Proyectos",
+            "logo": "/assets/logo.png",
+            "version": "1.0.0"
+        },
+        "roles": [
+            "admin",
+            "usuario",
+            "revisor",
+            "cliente"
+        ],
+        "estadosProyecto": [
+            "planificacion",
+            "en_progreso",
+            "completado",
+            "cancelado",
+            "pendiente"
+        ],
+        "prioridades": [
+            "baja",
+            "media",
+            "alta",
+            "critica"
+        ],
+        "tiposRevision": [
+            "calidad",
+            "avance",
+            "final",
+            "documentacion",
+            "seguridad"
+        ]
+    }
+}
