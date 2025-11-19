@@ -1,0 +1,184 @@
+<div class="container-fluid admin-dashboard">
+  <div class="row bg-dark text-white py-3">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="mb-0">
+            <i class="bi bi-speedometer2 me-2"></i>
+            Panel de Control - Administrador
+          </h2>
+          <small class="opacity-75">Sistema de Gestión de Proyectos de Grado</small>
+        </div>
+        <div class="text-end">
+          <h5 class="mb-1">Bienvenido, <strong>Admin Sistema</strong></h5>
+          <small class="opacity-75">Administrador</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-start border-primary border-4 shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Total Usuarios
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ systemStats.totalUsers }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-people fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-start border-success border-4 shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Proyectos Activos
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ systemStats.activeProjects }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-folder-check fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-start border-info border-4 shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Docentes Registrados
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ systemStats.registeredTeachers }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-person-badge fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-start border-warning border-4 shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Eventos del Sistema
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ systemStats.systemEvents }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-activity fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header bg-light">
+          <h4 class="mb-0">
+            <i class="bi bi-grid-3x3-gap me-2"></i>
+            MÓDULOS DISPONIBLES
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-xl-4 col-md-6 mb-4" *ngFor="let module of modules">
+              <div class="card module-card {{ module.borderClass }} shadow h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1" 
+                           [ngClass]="'text-' + module.buttonClass.split('-')[1]">
+                        {{ module.title }}
+                      </div>
+                      <div class="h6 mb-0 text-gray-800">
+                        <small>{{ module.description }}</small>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="{{ module.icon }}"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                  <button class="btn btn-sm w-100 {{ module.buttonClass }}" 
+                          (click)="navigateTo(module.route)">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>
+                    Acceder al Módulo
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <i class="bi bi-clock-history me-2"></i>
+            Actividad Reciente
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            <div class="list-group-item d-flex align-items-center" *ngFor="let activity of recentActivities">
+              <i class="{{ activity.icon }} me-3"></i>
+              <div class="flex-grow-1">
+                <div class="fw-bold">{{ activity.title }}</div>
+                <small class="text-muted">{{ activity.description }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Alertas del Sistema
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            <div class="list-group-item d-flex align-items-center" *ngFor="let alert of systemAlerts">
+              <i class="{{ alert.icon }} me-3"></i>
+              <div class="flex-grow-1">
+                <div class="fw-bold">{{ alert.title }}</div>
+                <small class="text-muted">{{ alert.description }}</small>
+              </div>
+              <span class="badge" [ngClass]="getBadgeClass(alert.severity)">{{ alert.badge }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

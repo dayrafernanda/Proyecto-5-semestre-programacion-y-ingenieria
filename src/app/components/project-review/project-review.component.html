@@ -1,0 +1,310 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+              <i class="bi bi-search me-2"></i>
+              Revisión de Proyectos
+            </h4>
+            <div class="d-flex align-items-center">
+              <div class="btn-group me-3">
+                <button class="btn btn-sm" 
+                    [class]="getFilterButtonClass('all')"
+                    (click)="applyFilter('all')">
+                    Todos
+                </button>
+                <button class="btn btn-sm" 
+                      [class]="getFilterButtonClass('pending')"
+                      (click)="applyFilter('pending')">
+                      Pendientes
+                </button>
+                <button class="btn btn-sm" 
+                      [class]="getFilterButtonClass('in_progress')"
+                      (click)="applyFilter('in_progress')">
+                      En Progreso
+                </button>
+                <button class="btn btn-sm" 
+                      [class]="getFilterButtonClass('completed')"
+                      (click)="applyFilter('completed')">
+                      Completados
+                </button>
+              </div>
+              <small class="text-light">
+                <i class="bi bi-funnel me-1"></i>{{ getActiveFilterText() }} 
+                ({{ filteredProjects.length }} de {{ totalProjectsCount }})
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="card bg-primary text-white text-center">
+                <div class="card-body py-3">
+                  <h4 class="mb-0">{{ totalProjectsCount }}</h4>
+                  <small>Total Asignados</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-warning text-white text-center">
+                <div class="card-body py-3">
+                  <h4 class="mb-0">{{ pendingProjectsCount }}</h4>
+                  <small>Pendientes</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-danger text-white text-center">
+                <div class="card-body py-3">
+                  <h4 class="mb-0">{{ highPriorityProjectsCount }}</h4>
+                  <small>Alta Prioridad</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-success text-white text-center">
+                <div class="card-body py-3">
+                  <h4 class="mb-0">{{ completedProjectsCount }}</h4>
+                  <small>Completados</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Proyecto</th>
+                  <th>Estudiante</th>
+                  <th>Área</th>
+                  <th>Estado</th>
+                  <th>Prioridad</th>
+                  <th>Tiempo Restante</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let project of filteredProjects"
+                    [class.table-warning]="project.priority === 'high'"
+                    [class.table-danger]="project.daysLeft <= 1 && project.daysLeft >= 0">
+                  <td>
+                    <strong>{{ project.title }}</strong>
+                    <br>
+                    <small class="text-muted">ID: {{ project.id }}</small>
+                  </td>
+                  <td>
+                    {{ project.student }}
+                    <br>
+                    <small class="text-muted">ID: {{ project.studentId }}</small>
+                  </td>
+                  <td>{{ project.area }}</td>
+                  <td>
+                    <span class="badge {{ getStatusBadgeClass(project.status) }}">
+                      {{ getStatusText(project.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge {{ getPriorityBadgeClass(project.priority) }}">
+                      {{ project.priority === 'high' ? 'Alta' : project.priority === 'medium' ? 'Media' : 'Baja' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [class.text-danger]="project.daysLeft <= 2 && project.daysLeft >= 0"
+                          [class.text-success]="project.daysLeft > 2">
+                      {{ getDaysLeftText(project.daysLeft) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-outline-primary" (click)="viewDetails(project.id)">
+                        <i class="bi bi-eye"></i> Ver
+                      </button>
+                      <button class="btn btn-success" 
+                              (click)="startReview(project.id)"
+                              [disabled]="project.status === 'completed'">
+                        <i class="bi bi-pencil"></i> Revisar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="filteredProjects.length === 0" class="alert alert-info text-center">
+            <i class="bi bi-info-circle me-2"></i>
+            No hay proyectos que coincidan con el filtro "{{ getActiveFilterText() }}"
+          </div>
+
+          <div class="alert alert-danger mt-3" 
+               *ngIf="urgentProjectsCount > 0">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Urgente:</strong> Tienes {{ urgentProjectsCount }} 
+            proyecto(s) por vencer en menos de 24 horas.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showDetailsModal && selectedProject" class="modal-backdrop show"></div>
+<div *ngIf="showDetailsModal && selectedProject" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-info-circle me-2"></i>
+          Detalles del Proyecto
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModals()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h4>{{ selectedProject.title }}</h4>
+            <p class="text-muted">ID: {{ selectedProject.id }}</p>
+          </div>
+          <div class="col-md-6 text-end">
+            <span class="badge {{ getStatusBadgeClass(selectedProject.status) }} fs-6">
+              {{ getStatusText(selectedProject.status) }}
+            </span>
+            <br>
+            <span class="badge {{ getPriorityBadgeClass(selectedProject.priority) }} mt-1">
+              Prioridad {{ getPriorityText(selectedProject.priority) }}
+            </span>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Información del Estudiante</h6>
+            <p><strong>Nombre:</strong> {{ selectedProject.student }}</p>
+            <p><strong>ID Estudiante:</strong> {{ selectedProject.studentId }}</p>
+          </div>
+          <div class="col-md-6">
+            <h6>Información del Proyecto</h6>
+            <p><strong>Área:</strong> {{ selectedProject.area }}</p>
+            <p><strong>Tiempo restante:</strong> 
+              <span [class.text-danger]="selectedProject.daysLeft <= 2" 
+                    [class.text-success]="selectedProject.daysLeft > 2">
+                {{ getDaysLeftText(selectedProject.daysLeft) }}
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-3 p-3 bg-light rounded">
+          <h6>Resumen del Proyecto</h6>
+          <p class="mb-0">
+            Proyecto de {{ selectedProject.area.toLowerCase() }} desarrollado por 
+            {{ selectedProject.student }}. Actualmente 
+            <span [class.text-warning]="selectedProject.status === 'pending'"
+                  [class.text-info]="selectedProject.status === 'in_progress'"
+                  [class.text-success]="selectedProject.status === 'completed'">
+              {{ getStatusText(selectedProject.status).toLowerCase() }}
+            </span> 
+            con prioridad 
+            <span [class.text-danger]="selectedProject.priority === 'high'"
+                  [class.text-warning]="selectedProject.priority === 'medium'"
+                  [class.text-secondary]="selectedProject.priority === 'low'">
+              {{ getPriorityText(selectedProject.priority).toLowerCase() }}
+            </span>.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModals()">
+          <i class="bi bi-x-circle me-1"></i>Cerrar
+        </button>
+        <button type="button" class="btn btn-success" 
+                (click)="startReview(selectedProject.id)" 
+                [disabled]="selectedProject.status === 'completed'">
+          <i class="bi bi-pencil me-1"></i>Iniciar Revisión
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showReviewModal && selectedProject" class="modal-backdrop show"></div>
+<div *ngIf="showReviewModal && selectedProject" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil-square me-2"></i>
+          Revisar Proyecto
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModals()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info">
+          <h6>Proyecto a revisar: {{ selectedProject.title }}</h6>
+          <p class="mb-0">Estudiante: {{ selectedProject.student }} ({{ selectedProject.studentId }})</p>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Comentarios de Revisión:</label>
+          <textarea class="form-control" rows="6" 
+                    [(ngModel)]="reviewComments"
+                    placeholder="Ingresa tus observaciones, comentarios y sugerencias para el estudiante..."></textarea>
+          <div class="form-text">
+            Sé específico y constructivo en tus comentarios. Incluye aspectos positivos y áreas de mejora.
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Estado Final:</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="statusCompleted" 
+                     value="completed" [(ngModel)]="reviewStatus" [checked]="reviewStatus === 'completed'">
+              <label class="form-check-label text-success" for="statusCompleted">
+                <i class="bi bi-check-circle me-1"></i>Aprobado
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="statusInProgress" 
+                     value="in_progress" [(ngModel)]="reviewStatus">
+              <label class="form-check-label text-info" for="statusInProgress">
+                <i class="bi bi-arrow-clockwise me-1"></i>En Progreso
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="statusPending" 
+                     value="pending" [(ngModel)]="reviewStatus">
+              <label class="form-check-label text-warning" for="statusPending">
+                <i class="bi bi-clock me-1"></i>Pendiente
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded">
+              <h6>Resumen del Proyecto</h6>
+              <p class="mb-1"><strong>Área:</strong> {{ selectedProject.area }}</p>
+              <p class="mb-1"><strong>Prioridad:</strong> {{ getPriorityText(selectedProject.priority) }}</p>
+              <p class="mb-1"><strong>Estado actual:</strong> {{ getStatusText(selectedProject.status) }}</p>
+              <p class="mb-0"><strong>Tiempo restante:</strong> {{ getDaysLeftText(selectedProject.daysLeft) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModals()">
+          <i class="bi bi-x-circle me-1"></i>Cancelar
+        </button>
+        <button type="button" class="btn btn-success" (click)="submitReview()"
+                [disabled]="!reviewComments.trim()">
+          <i class="bi bi-send me-1"></i>Enviar Revisión
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

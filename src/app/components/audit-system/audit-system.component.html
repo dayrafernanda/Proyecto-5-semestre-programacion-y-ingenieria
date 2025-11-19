@@ -1,0 +1,190 @@
+<div class="container-fluid audit-system">
+  <div class="row bg-dark text-white py-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="mb-2">
+            <i class="bi bi-shield-check me-3"></i>
+            Auditoría del Sistema
+          </h1>
+          <p class="mb-0 lead">Sistema integral de monitoreo y seguridad</p>
+        </div>
+        <div class="text-end">
+          <button class="btn btn-light me-2" (click)="exportLogs()">
+            <i class="bi bi-download me-2"></i>Exportar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="mb-0">{{ getStats().total }}</h4>
+              <small>Total Eventos</small>
+            </div>
+            <i class="bi bi-activity fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="mb-0">{{ getStats().success }}</h4>
+              <small>Éxitos</small>
+            </div>
+            <i class="bi bi-check-circle fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-danger text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="mb-0">{{ getStats().errors }}</h4>
+              <small>Errores</small>
+            </div>
+            <i class="bi bi-exclamation-circle fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-warning text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="mb-0">{{ getStats().warnings }}</h4>
+              <small>Advertencias</small>
+            </div>
+            <i class="bi bi-exclamation-triangle fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Buscar</label>
+              <input type="text" 
+                     class="form-control" 
+                     placeholder="Usuario, acción o detalles..."
+                     [(ngModel)]="searchQuery"
+                     (input)="onSearchChange()">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Módulo</label>
+              <select class="form-select" [(ngModel)]="selectedModule" (change)="applyFilters()">
+                <option value="all">Todos los módulos</option>
+                <option *ngFor="let module of modules" [value]="module">{{ module }}</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Estado</label>
+              <select class="form-select" [(ngModel)]="selectedStatus" (change)="applyFilters()">
+                <option value="all">Todos los estados</option>
+                <option value="success">Éxito</option>
+                <option value="error">Error</option>
+                <option value="warning">Advertencia</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Fecha desde</label>
+              <input type="date" class="form-control" [(ngModel)]="dateRange.start" (change)="applyFilters()">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Fecha hasta</label>
+              <input type="date" class="form-control" [(ngModel)]="dateRange.end" (change)="applyFilters()">
+            </div>
+            <div class="col-md-1 d-flex align-items-end">
+              <button class="btn btn-outline-secondary w-100" (click)="clearFilters()">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            Registros de Auditoría
+            <span class="badge bg-primary ms-2">{{ filteredLogs.length }}</span>
+          </h5>
+          <small class="text-muted">Última actualización: {{ now() | date:'dd/MM/yyyy HH:mm' }}</small>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Fecha/Hora</th>
+                  <th>Usuario</th>
+                  <th>Acción</th>
+                  <th>Módulo</th>
+                  <th>IP</th>
+                  <th>Estado</th>
+                  <th>Detalles</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let log of filteredLogs">
+                  <td>
+                    <small class="text-muted">
+                      {{ log.timestamp | date:'dd/MM/yyyy HH:mm' }}
+                    </small>
+                  </td>
+                  <td>
+                    <span class="fw-bold">{{ log.user }}</span>
+                  </td>
+                  <td>
+                    <code>{{ log.action }}</code>
+                  </td>
+                  <td>{{ log.module }}</td>
+                  <td>
+                    <span class="text-muted font-monospace">{{ log.ipAddress }}</span>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="getStatusBadgeClass(log.status)">
+                      {{ getStatusText(log.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <small>{{ log.details }}</small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="filteredLogs.length === 0" class="text-center py-5">
+            <i class="bi bi-search display-1 text-muted"></i>
+            <h5 class="text-muted mt-3">No se encontraron registros</h5>
+            <button class="btn btn-primary" (click)="clearFilters()">
+              <i class="bi bi-arrow-clockwise me-1"></i>Limpiar Filtros
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

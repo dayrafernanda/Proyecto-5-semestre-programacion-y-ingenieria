@@ -1,0 +1,119 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0">
+            <i class="bi bi-folder me-2"></i>
+            Mi Portafolio de Proyectos
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="card bg-primary text-white text-center">
+                <div class="card-body py-3">
+                  <h4 class="mb-0">{{ totalProjectsCount }}</h4>
+                  <small>Total Proyectos</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-success text-white text-center">
+                <div class="card-body py-3">
+                  <h4 class="mb-0">{{ approvedProjectsCount }}</h4>
+                  <small>Aprobados</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-warning text-white text-center">
+                <div class="card-body py-3">
+                  <h4 class="mb-0">{{ underReviewProjectsCount }}</h4>
+                  <small>En Revisión</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-danger text-white text-center">
+                <div class="card-body py-3">
+                  <h4 class="mb-0">{{ correctionsRequiredProjectsCount }}</h4>
+                  <small>Por Corregir</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Proyecto</th>
+                  <th>Estado</th>
+                  <th>Fecha Envío</th>
+                  <th>Revisor</th>
+                  <th>Calificación</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let project of studentProjects">
+                  <td>
+                    <strong>{{ project.title }}</strong>
+                    <br>
+                    <small class="text-muted">ID: {{ project.id }}</small>
+                  </td>
+                  <td>
+                    <span class="badge {{ getStatusBadgeClass(project.status) }}">
+                      {{ getStatusText(project.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    {{ project.submittedDate | date:'dd/MM/yyyy' }}
+                    <br>
+                    <small class="text-muted">{{ getDaysAgo(project.submittedDate) }}</small>
+                  </td>
+                  <td>
+                    {{ project.reviewer || 'Sin asignar' }}
+                  </td>
+                  <td>
+                    <span *ngIf="project.grade" class="badge bg-success fs-6">
+                      {{ project.grade }}/5.0
+                    </span>
+                    <span *ngIf="!project.grade" class="text-muted">-</span>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-outline-primary" [disabled]="project.status === 'under_review'">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button class="btn btn-outline-warning" 
+                              [disabled]="project.status === 'under_review' || project.status === 'approved'">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button class="btn btn-outline-info" *ngIf="project.feedback">
+                        <i class="bi bi-chat-text"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-warning mt-4" *ngIf="correctionsRequiredProjectsCount > 0">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Recordatorio:</strong> Tienes {{ correctionsRequiredProjectsCount }} 
+            proyecto(s) que requieren correcciones. Fecha límite: 30 de Enero, 2024.
+          </div>
+
+          <div class="text-center mt-3">
+            <a routerLink="/nuevo-proyecto" class="btn btn-success">
+              <i class="bi bi-plus-circle me-1"></i>Nuevo Proyecto
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

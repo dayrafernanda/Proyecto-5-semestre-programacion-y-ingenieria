@@ -1,0 +1,201 @@
+<div class="container-fluid academic-config">
+  <div class="row bg-info text-white py-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="mb-2">
+            <i class="bi bi-gear me-3"></i>
+            Configuración Académica
+          </h1>
+          <p class="mb-0 lead">Sistema de configuración de parámetros académicos</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'periods'" 
+                 (click)="activeTab = 'periods'">
+                <i class="bi bi-calendar-event me-2"></i>Periodos Académicos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'parameters'" 
+                 (click)="activeTab = 'parameters'">
+                <i class="bi bi-sliders me-2"></i>Parámetros del Sistema
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-body" *ngIf="activeTab === 'periods'">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">Gestión de Periodos Académicos</h5>
+            <button class="btn btn-primary" (click)="openNewPeriodModal()">
+              <i class="bi bi-plus-circle me-2"></i>Nuevo Periodo
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Nombre</th>
+                  <th>Fecha Inicio</th>
+                  <th>Fecha Fin</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let period of academicPeriods">
+                  <td class="fw-bold">{{ period.name }}</td>
+                  <td>{{ period.startDate | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ period.endDate | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="getStatusBadgeClass(period.status)">
+                      {{ getStatusText(period.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-outline-primary" 
+                              (click)="openEditPeriodModal(period)">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button class="btn btn-outline-danger" 
+                              (click)="deletePeriod(period.id)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card-body" *ngIf="activeTab === 'parameters'">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">Configuración de Parámetros del Sistema</h5>
+            <div>
+              <button class="btn btn-outline-secondary me-2" (click)="resetParameters()">
+                <i class="bi bi-arrow-clockwise me-2"></i>Restaurar
+              </button>
+              <button class="btn btn-success" (click)="saveParameters()">
+                <i class="bi bi-check-lg me-2"></i>Guardar Cambios
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6" *ngFor="let param of systemParameters">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h6 class="card-title">{{ param.description }}</h6>
+                  <div class="mb-2">
+                    <small class="text-muted">Categoría: {{ param.category }}</small>
+                  </div>
+                  
+                  <div *ngIf="param.type === 'number'" class="mb-3">
+                    <input type="number" 
+                           class="form-control"
+                           [(ngModel)]="param.value">
+                  </div>
+
+                  <div *ngIf="param.type === 'string'" class="mb-3">
+                    <input type="text" 
+                           class="form-control"
+                           [(ngModel)]="param.value">
+                  </div>
+
+                  <div *ngIf="param.type === 'boolean'" class="mb-3">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" 
+                             type="checkbox"
+                             [(ngModel)]="param.value">
+                      <label class="form-check-label">
+                        {{ param.value ? 'Activado' : 'Desactivado' }}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div *ngIf="param.type === 'select'" class="mb-3">
+                    <select class="form-select" [(ngModel)]="param.value">
+                      <option *ngFor="let option of param.options" [value]="option">
+                        {{ option }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showPeriodModal" class="modal-backdrop show"></div>
+<div *ngIf="showPeriodModal" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-calendar-plus me-2"></i>
+          {{ isEditingPeriod ? 'Editar Periodo' : 'Nuevo Periodo Académico' }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" 
+                (click)="closePeriodModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Nombre del Periodo *</label>
+          <input type="text" 
+                 class="form-control" 
+                 [(ngModel)]="newPeriod.name"
+                 placeholder="Ej: Primer Semestre 2024">
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Fecha Inicio *</label>
+            <input type="date" 
+                   class="form-control" 
+                   [(ngModel)]="newPeriod.startDate">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Fecha Fin *</label>
+            <input type="date" 
+                   class="form-control" 
+                   [(ngModel)]="newPeriod.endDate">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Estado</label>
+          <select class="form-select" [(ngModel)]="newPeriod.status">
+            <option value="upcoming">Próximo</option>
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" 
+                (click)="closePeriodModal()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" 
+                (click)="savePeriod()"
+                [disabled]="!isPeriodFormValid()">
+          {{ isEditingPeriod ? 'Actualizar' : 'Crear' }} Periodo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

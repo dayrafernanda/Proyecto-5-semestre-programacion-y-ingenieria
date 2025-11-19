@@ -1,0 +1,284 @@
+<div class="container-fluid user-management">
+  <div class="row bg-primary text-white py-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="mb-2">
+            <i class="bi bi-people me-3"></i>
+            Gestión de Usuarios
+          </h1>
+          <p class="mb-0 lead">Sistema integral de administración de usuarios y permisos</p>
+        </div>
+        <div class="text-end">
+          <button class="btn btn-light" (click)="openNewUserModal()">
+            <i class="bi bi-person-plus me-2"></i>Nuevo Usuario
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Buscar usuarios</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light">
+                  <i class="bi bi-search"></i>
+                </span>
+                <input type="text" 
+                       class="form-control" 
+                       placeholder="Nombre, email o departamento..."
+                       [(ngModel)]="searchQuery"
+                       (input)="onSearchChange()">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Filtrar por rol</label>
+              <select class="form-select" [(ngModel)]="selectedRole" (change)="applyFilters()">
+                <option value="all">Todos los roles</option>
+                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Filtrar por estado</label>
+              <select class="form-select" [(ngModel)]="selectedStatus" (change)="applyFilters()">
+                <option value="all">Todos los estados</option>
+                <option value="active">Activo</option>
+                <option value="inactive">Inactivo</option>
+                <option value="pending">Pendiente</option>
+              </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <button class="btn btn-outline-secondary w-100" (click)="applyFilters()">
+                <i class="bi bi-funnel me-2"></i>Filtrar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="mb-0">{{ users.length }}</h4>
+              <small>Total Usuarios</small>
+            </div>
+            <i class="bi bi-people fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="mb-0">{{ getActiveUsersCount() }}</h4>
+              <small>Usuarios Activos</small>
+            </div>
+            <i class="bi bi-check-circle fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-warning text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="mb-0">{{ getPendingUsersCount() }}</h4>
+              <small>Pendientes</small>
+            </div>
+            <i class="bi bi-clock fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h4 class="mb-0">{{ getTeachersCount() }}</h4>
+              <small>Docentes</small>
+            </div>
+            <i class="bi bi-person-badge fs-1 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            Lista de Usuarios
+            <span class="badge bg-primary ms-2">{{ filteredUsers.length }}</span>
+          </h5>
+          <small class="text-muted">Mostrando {{ filteredUsers.length }} de {{ users.length }} usuarios</small>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Usuario</th>
+                  <th>Rol</th>
+                  <th>Departamento</th>
+                  <th>Estado</th>
+                  <th>Último Acceso</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of filteredUsers">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle bg-primary text-white me-3">
+                        {{ getInitial(user.name) }}
+                      </div>
+                      <div>
+                        <div class="fw-bold">{{ user.name }}</div>
+                        <small class="text-muted">{{ user.email }}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="getRoleBadgeClass(user.role)">
+                      {{ user.role }}
+                    </span>
+                  </td>
+                  <td>{{ user.department }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="getStatusBadgeClass(user.status)">
+                      {{ getStatusText(user.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <small class="text-muted">
+                      {{ user.lastLogin | date:'dd/MM/yyyy' }}
+                    </small>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-outline-primary" 
+                              (click)="openEditUserModal(user)"
+                              title="Editar usuario">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button class="btn btn-outline-danger" 
+                              (click)="deleteUser(user.id)"
+                              title="Eliminar usuario">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="filteredUsers.length === 0" class="text-center py-5">
+            <i class="bi bi-search display-1 text-muted"></i>
+            <h5 class="text-muted mt-3">No se encontraron usuarios</h5>
+            <p class="text-muted">Prueba ajustando los filtros de búsqueda</p>
+            <button class="btn btn-primary" (click)="clearFilters()">
+              <i class="bi bi-arrow-clockwise me-1"></i>Limpiar Filtros
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showUserModal" class="modal-backdrop show"></div>
+<div *ngIf="showUserModal" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-person me-2"></i>
+          {{ isEditing ? 'Editar Usuario' : 'Nuevo Usuario' }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" 
+                (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nombre completo *</label>
+            <input type="text" 
+                   class="form-control" 
+                   [(ngModel)]="newUser.name"
+                   required
+                   placeholder="Ingrese el nombre completo">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Email *</label>
+            <input type="email" 
+                   class="form-control" 
+                   [(ngModel)]="newUser.email"
+                   required
+                   placeholder="usuario@universidad.edu">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Rol *</label>
+            <select class="form-select" 
+                    [(ngModel)]="newUser.role"
+                    required>
+              <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Estado *</label>
+            <select class="form-select" 
+                    [(ngModel)]="newUser.status"
+                    required>
+              <option value="active">Activo</option>
+              <option value="inactive">Inactivo</option>
+              <option value="pending">Pendiente</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Departamento *</label>
+          <select class="form-select" 
+                  [(ngModel)]="newUser.department"
+                  required>
+            <option value="">Seleccione un departamento</option>
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" 
+                (click)="closeModal()">
+          <i class="bi bi-x-circle me-1"></i>Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" 
+                (click)="saveUser()"
+                [disabled]="!isFormValid()">
+          <i class="bi bi-check-lg me-1"></i>
+          {{ isEditing ? 'Actualizar' : 'Crear' }} Usuario
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

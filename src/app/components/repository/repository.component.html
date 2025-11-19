@@ -1,0 +1,526 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Header del Repositorio -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-info text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h4 class="mb-0">
+                <i class="bi bi-collection me-2"></i>
+                Repositorio Docente
+              </h4>
+              <small class="opacity-75">Gestión y organización de recursos educativos</small>
+            </div>
+            <button class="btn btn-light" (click)="openUploadModal()">
+              <i class="bi bi-cloud-upload me-1"></i>Subir Recursos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sistema de Búsqueda Avanzada -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <!-- Barra de Búsqueda Principal -->
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <div class="input-group">
+                <span class="input-group-text bg-light">
+                  <i class="bi bi-search"></i>
+                </span>
+                <input type="text" 
+                       class="form-control" 
+                       placeholder="Buscar en títulos, descripciones y etiquetas..."
+                       [(ngModel)]="searchQuery"
+                       (input)="onSearchChange()">
+                <button class="btn btn-outline-secondary" 
+                        type="button"
+                        (click)="showSearchModal = true">
+                  <i class="bi bi-funnel"></i>
+                  Filtros
+                </button>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex gap-2">
+                <select class="form-select" 
+                        [(ngModel)]="sortBy" 
+                        (change)="changeSort(sortBy)">
+                  <option *ngFor="let option of sortOptions" [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+                <button class="btn btn-outline-secondary" 
+                        (click)="changeSort(sortBy)"
+                        [title]="sortOrder === 'asc' ? 'Orden ascendente' : 'Orden descendente'">
+                  <i class="bi" 
+                     [class.bi-sort-down]="sortOrder === 'desc'"
+                     [class.bi-sort-up]="sortOrder === 'asc'"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Etiquetas de Búsqueda Activas -->
+          <div *ngIf="searchTags.length > 0" class="mb-3">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+              <small class="text-muted">Etiquetas:</small>
+              <span *ngFor="let tag of searchTags" 
+                    class="badge bg-primary d-flex align-items-center">
+                #{{ tag }}
+                <button class="btn-close btn-close-white ms-1" 
+                        style="font-size: 0.7rem;"
+                        (click)="removeSearchTag(tag)"></button>
+              </span>
+              <button class="btn btn-sm btn-outline-danger" 
+                      (click)="clearSearchTags()">
+                <i class="bi bi-x-circle me-1"></i>Limpiar
+              </button>
+            </div>
+          </div>
+
+          <!-- Resumen de Filtros Activos -->
+          <div *ngIf="searchQuery || searchTags.length > 0 || selectedCategories.length > 0 || selectedFileTypes.length > 0 || selectedVisibility !== 'all'" 
+               class="alert alert-light py-2">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <small class="text-muted">
+                  <i class="bi bi-funnel me-1"></i>
+                  Filtros activos: 
+                  <span class="badge bg-info ms-1">{{ filteredResources.length }}</span> de 
+                  <span class="badge bg-secondary">{{ resources.length }}</span> recursos
+                </small>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary" 
+                      (click)="clearAllFilters()">
+                <i class="bi bi-arrow-clockwise me-1"></i>Limpiar todo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estadísticas Rápidas -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card bg-primary text-white text-center">
+            <div class="card-body py-3">
+              <h4 class="mb-0">{{ resources.length }}</h4>
+              <small>Total Recursos</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-success text-white text-center">
+            <div class="card-body py-3">
+              <h4 class="mb-0">{{ getTotalDownloads() }}</h4>
+              <small>Total Descargas</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-warning text-white text-center">
+            <div class="card-body py-3">
+              <h4 class="mb-0">{{ getTotalViews() }}</h4>
+              <small>Total Visualizaciones</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-info text-white text-center">
+            <div class="card-body py-3">
+              <h4 class="mb-0">{{ getPublicResourcesCount() }}</h4>
+              <small>Recursos Públicos</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de Recursos -->
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+              <i class="bi bi-files me-2"></i>
+              Recursos Encontrados
+              <span class="badge bg-primary ms-2">{{ filteredResources.length }}</span>
+            </h5>
+            <div class="d-flex align-items-center">
+              <small class="text-muted me-3">
+                Ordenado por: {{ getCurrentSortLabel() }}
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Grid de Recursos -->
+          <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4" *ngFor="let resource of filteredResources">
+              <div class="card h-100 resource-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <span class="badge {{ getFileTypeClass(resource.fileType) }}">
+                    <i class="bi {{ getFileIcon(resource.fileType) }} me-1"></i>
+                    {{ resource.fileType.toUpperCase() }}
+                  </span>
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary border-0" 
+                            type="button" 
+                            data-bs-toggle="dropdown">
+                      <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="#" (click)="viewResource(resource); $event.preventDefault()">
+                          <i class="bi bi-eye me-2"></i>Ver
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#" (click)="downloadResource(resource); $event.preventDefault()">
+                          <i class="bi bi-download me-2"></i>Descargar
+                        </a>
+                      </li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li>
+                        <a class="dropdown-item text-danger" href="#" 
+                           (click)="deleteResource(resource.id); $event.preventDefault()">
+                          <i class="bi bi-trash me-2"></i>Eliminar
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <h6 class="card-title">{{ resource.title }}</h6>
+                  <p class="card-text text-muted small">{{ resource.description }}</p>
+                  
+                  <div class="mb-2">
+                    <span class="badge bg-light text-dark me-1">
+                      <i class="bi bi-folder me-1"></i>{{ resource.category }}
+                    </span>
+                    <span *ngFor="let tag of resource.tags" class="badge bg-light text-dark me-1">
+                      #{{ tag }}
+                    </span>
+                  </div>
+
+                  <div class="resource-info small text-muted">
+                    <div class="d-flex justify-content-between">
+                      <span>
+                        <i class="bi bi-person me-1"></i>
+                        {{ resource.uploader }}
+                      </span>
+                      <span>
+                        <i class="bi bi-calendar me-1"></i>
+                        {{ resource.uploadDate | date:'dd/MM/yy' }}
+                      </span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                      <span>
+                        <i class="bi bi-hdd me-1"></i>
+                        {{ resource.fileSize ? formatFileSize(resource.fileSize) : 'N/A' }}
+                      </span>
+                      <span>
+                        <i class="bi bi-download me-1"></i>
+                        {{ resource.downloadCount }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                      <i class="bi bi-eye me-1"></i>{{ resource.viewCount }} vistas
+                    </small>
+                    <span class="badge" 
+                          [class.bg-success]="resource.isPublic" 
+                          [class.bg-secondary]="!resource.isPublic">
+                      {{ resource.isPublic ? 'Público' : 'Privado' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mensaje cuando no hay resultados -->
+          <div *ngIf="filteredResources.length === 0" class="text-center py-5">
+            <i class="bi bi-search display-1 text-muted"></i>
+            <h5 class="text-muted mt-3">No se encontraron recursos</h5>
+            <p class="text-muted">Prueba ajustando los filtros de búsqueda</p>
+            <button class="btn btn-info me-2" (click)="clearAllFilters()">
+              <i class="bi bi-arrow-clockwise me-1"></i>Limpiar Filtros
+            </button>
+            <button class="btn btn-outline-info" (click)="openUploadModal()">
+              <i class="bi bi-cloud-upload me-1"></i>Subir Nuevo Recurso
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Búsqueda Avanzada -->
+<div *ngIf="showSearchModal" class="modal-backdrop show"></div>
+<div *ngIf="showSearchModal" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-funnel me-2"></i>
+          Búsqueda Avanzada
+        </h5>
+        <button type="button" class="btn-close btn-close-white" 
+                (click)="showSearchModal = false"></button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Búsqueda por Etiquetas -->
+        <div class="mb-4">
+          <label class="form-label fw-bold">Búsqueda por Etiquetas</label>
+          <div class="input-group mb-2">
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="Escribe una etiqueta..."
+                   [(ngModel)]="currentTagInput"
+                   (keyup.enter)="addSearchTag()">
+            <button class="btn btn-outline-primary" 
+                    type="button"
+                    (click)="addSearchTag()">
+              <i class="bi bi-plus"></i> Agregar
+            </button>
+          </div>
+          
+          <!-- Etiquetas Sugeridas -->
+          <div *ngIf="getSuggestedTags().length > 0" class="mb-3">
+            <small class="text-muted d-block mb-1">Etiquetas sugeridas:</small>
+            <div class="d-flex flex-wrap gap-1">
+              <span *ngFor="let tag of getSuggestedTags()" 
+                    class="badge bg-light text-dark cursor-pointer"
+                    (click)="addTagFromSuggestion(tag)">
+                #{{ tag }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Etiquetas Seleccionadas -->
+          <div *ngIf="searchTags.length > 0" class="selected-tags">
+            <small class="text-muted d-block mb-1">Etiquetas activas:</small>
+            <div class="d-flex flex-wrap gap-1">
+              <span *ngFor="let tag of searchTags" 
+                    class="badge bg-primary d-flex align-items-center">
+                #{{ tag }}
+                <button class="btn-close btn-close-white ms-1" 
+                        style="font-size: 0.7rem;"
+                        (click)="removeSearchTag(tag)"></button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtros por Categoría -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Categorías</label>
+            <div class="filter-options">
+              <div *ngFor="let category of categories" 
+                   class="form-check">
+                <input class="form-check-input" 
+                       type="checkbox" 
+                       [id]="'cat-' + category"
+                       [checked]="selectedCategories.includes(category)"
+                       (change)="toggleCategory(category)">
+                <label class="form-check-label" [for]="'cat-' + category">
+                  {{ category }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Tipo de Archivo</label>
+            <div class="filter-options">
+              <div *ngFor="let fileType of fileTypes" 
+                   class="form-check">
+                <input class="form-check-input" 
+                       type="checkbox" 
+                       [id]="'type-' + fileType.value"
+                       [checked]="selectedFileTypes.includes(fileType.value)"
+                       (change)="toggleFileType(fileType.value)">
+                <label class="form-check-label" [for]="'type-' + fileType.value">
+                  <i class="bi {{ fileType.icon }} me-2"></i>
+                  {{ fileType.label }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtros Adicionales -->
+        <div class="row">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Visibilidad</label>
+            <select class="form-select" [(ngModel)]="selectedVisibility" (change)="applyFilters()">
+              <option value="all">Todos los recursos</option>
+              <option value="public">Solo públicos</option>
+              <option value="private">Solo privados</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Ordenar por</label>
+            <select class="form-select" [(ngModel)]="sortBy" (change)="changeSort(sortBy)">
+              <option *ngFor="let option of sortOptions" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" 
+                (click)="clearAllFilters()">
+          <i class="bi bi-arrow-clockwise me-1"></i>Limpiar Todo
+        </button>
+        <button type="button" class="btn btn-primary" 
+                (click)="applyFiltersAndClose()">
+          <i class="bi bi-check-lg me-1"></i>Aplicar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Subida de Archivos -->
+<div *ngIf="showUploadModal" class="modal-backdrop show"></div>
+<div *ngIf="showUploadModal" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-cloud-upload me-2"></i>
+          Subir Nuevos Recursos
+        </h5>
+        <button type="button" class="btn-close btn-close-white" 
+                (click)="closeUploadModal()"
+                [disabled]="isUploading"></button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Información del Recurso -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Título del Recurso *</label>
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="Ingresa un título descriptivo"
+                   [(ngModel)]="newResource.title"
+                   [disabled]="isUploading">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Categoría *</label>
+            <select class="form-select" 
+                    [(ngModel)]="newResource.category"
+                    [disabled]="isUploading">
+              <option value="">Selecciona una categoría</option>
+              <option *ngFor="let category of categories" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Descripción</label>
+          <textarea class="form-control" 
+                    rows="3" 
+                    placeholder="Describe el contenido del recurso..."
+                    [(ngModel)]="newResource.description"
+                    [disabled]="isUploading"></textarea>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Tipo de Archivo</label>
+            <select class="form-select" 
+                    [(ngModel)]="newResource.fileType"
+                    [disabled]="isUploading">
+              <option *ngFor="let fileType of fileTypes" [value]="fileType.value">
+                {{ fileType.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Visibilidad</label>
+            <select class="form-select" 
+                    [(ngModel)]="newResource.isPublic"
+                    [disabled]="isUploading">
+              <option [ngValue]="true">Público</option>
+              <option [ngValue]="false">Privado</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Selección de Archivos -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Seleccionar Archivos *</label>
+          <input type="file" 
+                 class="form-control" 
+                 multiple
+                 (change)="onFileSelected($event)"
+                 [disabled]="isUploading">
+          <div class="form-text">
+            Puedes seleccionar múltiples archivos. Tamaño máximo por archivo: 50MB
+          </div>
+        </div>
+
+        <!-- Archivos Seleccionados -->
+        <div *ngIf="selectedFiles.length > 0" class="mb-3">
+          <label class="form-label fw-bold">Archivos a subir:</label>
+          <div class="list-group">
+            <div *ngFor="let file of selectedFiles; let i = index" 
+                 class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <i class="bi bi-file-earmark me-2"></i>
+                {{ file.name }}
+                <small class="text-muted ms-2">({{ getFileSizeDisplay(file.size) }})</small>
+              </div>
+              <button type="button" 
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="removeSelectedFile(i)"
+                      [disabled]="isUploading">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Progreso -->
+        <div *ngIf="isUploading" class="mb-3">
+          <label class="form-label fw-bold">Progreso de Subida</label>
+          <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                 [style.width]="uploadProgress + '%'">
+              {{ uploadProgress }}%
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" 
+                class="btn btn-secondary" 
+                (click)="closeUploadModal()"
+                [disabled]="isUploading">
+          <i class="bi bi-x-circle me-1"></i>Cancelar
+        </button>
+        <button type="button" 
+                class="btn btn-primary" 
+                (click)="uploadFiles()"
+                [disabled]="isUploading || selectedFiles.length === 0 || !newResource.title">
+          <i class="bi bi-cloud-upload me-1"></i>
+          {{ isUploading ? 'Subiendo...' : 'Subir Recursos' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

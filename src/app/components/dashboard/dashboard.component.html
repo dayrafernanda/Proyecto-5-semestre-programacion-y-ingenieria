@@ -1,0 +1,286 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="bi bi-mortarboard-fill me-2"></i>
+        Sistema de Gestión de Proyectos
+      </a>
+      <div class="navbar-nav ms-auto">
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle me-1"></i>
+            {{ currentUser?.firstName }} {{ currentUser?.lastName }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><span class="dropdown-item-text">
+              <small class="text-muted">Rol: 
+                <span class="badge {{ getRoleBadgeClass(currentUser?.role!) }}">
+                  {{ getUserRoleName(currentUser?.role!) }}
+                </span>
+              </small>
+            </span></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+            <li><a class="dropdown-item text-danger" (click)="logout()" style="cursor: pointer;">
+              <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+            </a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-success text-white">
+            <h4 class="mb-0">
+              <i class="bi bi-speedometer2 me-2"></i>
+              Panel Principal - {{ getUserRoleName(currentUser?.role!) }}
+            </h4>
+          </div>
+          <div class="card-body">
+            <!-- Información del usuario -->
+            <div class="row mb-4">
+              <div class="col-md-8">
+                <h5 class="text-success">Bienvenido, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</h5>
+                <p class="text-muted mb-0">
+                  <span class="badge {{ getRoleBadgeClass(currentUser?.role!) }} fs-6">
+                    {{ getUserRoleName(currentUser?.role!) }}
+                  </span>
+                  <span *ngIf="currentUser?.specialization" class="ms-2">
+                    • {{ currentUser?.specialization }}
+                  </span>
+                  <span *ngIf="currentUser?.studentId" class="ms-2">
+                    • ID: {{ currentUser?.studentId }}
+                  </span>
+                </p>
+              </div>
+              <div class="col-md-4 text-end">
+                <div class="alert alert-info mb-0">
+                  <small>
+                    <i class="bi bi-info-circle me-1"></i>
+                    Sistema de Gestión de Proyectos de Grado
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Módulos del sistema -->
+            <h6 class="text-muted mb-3">MÓDULOS DISPONIBLES</h6>
+            
+            <div class="row g-3">
+              <div class="col-xl-4 col-md-6" *ngFor="let item of dashboardItems">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                      <div class="flex-shrink-0">
+                        <i class="bi {{ item.icon }} display-6 text-{{ item.color }}"></i>
+                      </div>
+                      <div class="flex-grow-1 ms-3">
+                        <h6 class="card-title mb-1">{{ item.title }}</h6>
+                        <p class="card-text text-muted small mb-0">{{ item.description }}</p>
+                      </div>
+                    </div>
+                    <a [routerLink]="item.route" class="btn btn-sm btn-outline-{{ item.color }} w-100">
+                      <i class="bi bi-arrow-right me-1"></i>Acceder
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mensaje si no hay módulos -->
+            <div class="text-center py-5" *ngIf="dashboardItems.length === 0">
+              <i class="bi bi-inbox display-1 text-muted"></i>
+              <h5 class="mt-3 text-muted">No hay módulos disponibles para tu rol</h5>
+              <p class="text-muted">Contacta al administrador del sistema para asignarte permisos.</p>
+            </div>
+
+            <!-- Estadísticas rápidas -->
+            <div class="row mt-5" *ngIf="dashboardItems.length > 0">
+              <div class="col-12">
+                <div class="card border-0 bg-light">
+                  <div class="card-body">
+                    <h6 class="text-muted mb-3">RESUMEN DEL SISTEMA</h6>
+                    <div class="row text-center">
+                      <div class="col-md-3">
+                        <div class="border-end">
+                          <h4 class="text-success mb-1">25</h4>
+                          <small class="text-muted">Proyectos Activos</small>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="border-end">
+                          <h4 class="text-primary mb-1">8</h4>
+                          <small class="text-muted">En Revisión</small>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="border-end">
+                          <h4 class="text-warning mb-1">12</h4>
+                          <small class="text-muted">Por Corregir</small>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <h4 class="text-info mb-1">5</h4>
+                        <small class="text-muted">Aprobados</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+EOF# Actualizar dashboard template
+cat > src/app/components/dashboard/dashboard.component.html << 'EOF'
+<div class="container-fluid">
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="bi bi-mortarboard-fill me-2"></i>
+        Sistema de Gestión de Proyectos
+      </a>
+      <div class="navbar-nav ms-auto">
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle me-1"></i>
+            {{ currentUser?.firstName }} {{ currentUser?.lastName }}
+          </a>
+          <ul class="dropdown-menu">
+            <li><span class="dropdown-item-text">
+              <small class="text-muted">Rol: 
+                <span class="badge {{ getRoleBadgeClass(currentUser?.role!) }}">
+                  {{ getUserRoleName(currentUser?.role!) }}
+                </span>
+              </small>
+            </span></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+            <li><a class="dropdown-item text-danger" (click)="logout()" style="cursor: pointer;">
+              <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+            </a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-success text-white">
+            <h4 class="mb-0">
+              <i class="bi bi-speedometer2 me-2"></i>
+              Panel Principal - {{ getUserRoleName(currentUser?.role!) }}
+            </h4>
+          </div>
+          <div class="card-body">
+            <!-- Información del usuario -->
+            <div class="row mb-4">
+              <div class="col-md-8">
+                <h5 class="text-success">Bienvenido, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</h5>
+                <p class="text-muted mb-0">
+                  <span class="badge {{ getRoleBadgeClass(currentUser?.role!) }} fs-6">
+                    {{ getUserRoleName(currentUser?.role!) }}
+                  </span>
+                  <span *ngIf="currentUser?.specialization" class="ms-2">
+                    • {{ currentUser?.specialization }}
+                  </span>
+                  <span *ngIf="currentUser?.studentId" class="ms-2">
+                    • ID: {{ currentUser?.studentId }}
+                  </span>
+                </p>
+              </div>
+              <div class="col-md-4 text-end">
+                <div class="alert alert-info mb-0">
+                  <small>
+                    <i class="bi bi-info-circle me-1"></i>
+                    Sistema de Gestión de Proyectos de Grado
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Módulos del sistema -->
+            <h6 class="text-muted mb-3">MÓDULOS DISPONIBLES</h6>
+            
+            <div class="row g-3">
+              <div class="col-xl-4 col-md-6" *ngFor="let item of dashboardItems">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                      <div class="flex-shrink-0">
+                        <i class="bi {{ item.icon }} display-6 text-{{ item.color }}"></i>
+                      </div>
+                      <div class="flex-grow-1 ms-3">
+                        <h6 class="card-title mb-1">{{ item.title }}</h6>
+                        <p class="card-text text-muted small mb-0">{{ item.description }}</p>
+                      </div>
+                    </div>
+                    <a [routerLink]="item.route" class="btn btn-sm btn-outline-{{ item.color }} w-100">
+                      <i class="bi bi-arrow-right me-1"></i>Acceder
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mensaje si no hay módulos -->
+            <div class="text-center py-5" *ngIf="dashboardItems.length === 0">
+              <i class="bi bi-inbox display-1 text-muted"></i>
+              <h5 class="mt-3 text-muted">No hay módulos disponibles para tu rol</h5>
+              <p class="text-muted">Contacta al administrador del sistema para asignarte permisos.</p>
+            </div>
+
+            <!-- Estadísticas rápidas -->
+            <div class="row mt-5" *ngIf="dashboardItems.length > 0">
+              <div class="col-12">
+                <div class="card border-0 bg-light">
+                  <div class="card-body">
+                    <h6 class="text-muted mb-3">RESUMEN DEL SISTEMA</h6>
+                    <div class="row text-center">
+                      <div class="col-md-3">
+                        <div class="border-end">
+                          <h4 class="text-success mb-1">25</h4>
+                          <small class="text-muted">Proyectos Activos</small>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="border-end">
+                          <h4 class="text-primary mb-1">8</h4>
+                          <small class="text-muted">En Revisión</small>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="border-end">
+                          <h4 class="text-warning mb-1">12</h4>
+                          <small class="text-muted">Por Corregir</small>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <h4 class="text-info mb-1">5</h4>
+                        <small class="text-muted">Aprobados</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

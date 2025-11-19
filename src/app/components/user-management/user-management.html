@@ -1,0 +1,133 @@
+<div class="container-fluid user-management">
+  <div class="row bg-primary text-white py-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="mb-2">
+            <i class="bi bi-people me-3"></i>
+            Gestión de Usuarios
+          </h1>
+          <p class="mb-0 lead">Sistema integral de administración de usuarios y permisos</p>
+        </div>
+        <div class="text-end">
+          <div class="badge bg-light text-primary fs-6 p-3">
+            <i class="bi bi-tools me-2"></i>
+            Módulo en Desarrollo
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="card construction-card shadow-lg border-0">
+        <div class="card-body text-center py-5">
+          <div class="construction-icon mb-4">
+            <i class="bi bi-hammer"></i>
+          </div>
+          <h2 class="text-warning mb-3">Módulo en Desarrollo</h2>
+          <p class="lead text-muted mb-4">
+            Esta funcionalidad estará disponible próximamente. Estamos trabajando para implementar 
+            todas las funcionalidades de gestión de usuarios de manera segura y eficiente.
+          </p>
+          
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Lanzamiento estimado:</strong> 
+                {{ estimatedLaunch | date:'longDate' }} 
+                (en {{ getDaysUntilLaunch() }} días)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h4 class="mb-0">
+            <i class="bi bi-graph-up me-2"></i>
+            Progreso de Desarrollo
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6" *ngFor="let item of progressItems">
+              <div class="progress-item mb-4">
+                <div class="d-flex justify-content-between mb-2">
+                  <span class="fw-bold">{{ item.name }}</span>
+                  <span class="text-muted">{{ item.progress }}%</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                  <div class="progress-bar" 
+                       [ngClass]="{
+                         'bg-success': item.progress === 100,
+                         'bg-primary': item.progress >= 75 && item.progress < 100,
+                         'bg-warning': item.progress >= 50 && item.progress < 75,
+                         'bg-info': item.progress >= 25 && item.progress < 50,
+                         'bg-secondary': item.progress < 25
+                       }"
+                       [style.width]="item.progress + '%'">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h4 class="mb-0">
+            <i class="bi bi-star me-2"></i>
+            Características Planificadas
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 col-lg-3 mb-4" *ngFor="let feature of features">
+              <div class="feature-card text-center p-4 h-100">
+                <div class="feature-icon mb-3">
+                  <i class="bi {{ feature.icon }} fs-1 text-primary"></i>
+                </div>
+                <h5 class="fw-bold">{{ feature.title }}</h5>
+                <p class="text-muted small">{{ feature.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5 mb-5">
+    <div class="col-12">
+      <div class="card bg-light border-0">
+        <div class="card-body text-center py-4">
+          <h5 class="mb-3">¿Necesitas acceso anticipado o tienes preguntas?</h5>
+          <p class="text-muted mb-3">
+            Contáctanos para obtener más información sobre el desarrollo de este módulo.
+          </p>
+          <div class="d-flex justify-content-center gap-3">
+            <button class="btn btn-outline-primary">
+              <i class="bi bi-envelope me-2"></i>Contactar al Equipo
+            </button>
+            <button class="btn btn-outline-secondary" routerLink="/admin">
+              <i class="bi bi-arrow-left me-2"></i>Volver al Panel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
