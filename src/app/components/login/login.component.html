@@ -15,12 +15,15 @@
 
           <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
             <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-control" name="email" 
-                     [(ngModel)]="credentials.email" required email #email="ngModel">
-              <div *ngIf="email.invalid && email.touched" class="text-danger small">
-                <span *ngIf="email.errors?.['required']">El email es requerido</span>
-                <span *ngIf="email.errors?.['email']">Formato de email inválido</span>
+              <label class="form-label">Email o Nombre de Usuario</label>
+              <input type="text" class="form-control" name="identifier" 
+                     [(ngModel)]="credentials.identifier" required #identifier="ngModel"
+                     placeholder="Ej: usuario&#64;email.com o 'Juan Pérez'">
+              <div class="form-text">
+                Puedes usar tu email o tu nombre completo
+              </div>
+              <div *ngIf="identifier.invalid && identifier.touched" class="text-danger small">
+                Este campo es requerido
               </div>
             </div>
 
@@ -38,6 +41,29 @@
               Ingresar
             </button>
           </form>
+
+          <!-- Usuarios de prueba para facilitar las demostraciones -->
+          <div class="mt-4">
+            <div class="card">
+              <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Usuarios de Prueba</h6>
+              </div>
+              <div class="card-body p-2">
+                <div class="row small text-muted">
+                  <div class="col-6">
+                    <strong>Admin:</strong><br>
+                    admin&#64;sistema.com<br>
+                    o "Admin Sistema"
+                  </div>
+                  <div class="col-6">
+                    <strong>Estudiante:</strong><br>
+                    estudiante&#64;email.com<br>
+                    o "María González"
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div class="text-center mt-4">
             <p class="mb-0">

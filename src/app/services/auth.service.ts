@@ -21,14 +21,28 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string): boolean {
-    // Simular verificación de credenciales
+  login(identifier: string, password: string): boolean {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find((u: User) => u.email === email);
+    
+    const user = users.find((u: User) => {
+      if (u.email.toLowerCase() === identifier.toLowerCase()) {
+        return true;
+      }
+      
+      const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
+      if (fullName === identifier.toLowerCase()) {
+        return true;
+      }
+      
+      const fullNameNoSpace = `${u.firstName}${u.lastName}`.toLowerCase();
+      if (fullNameNoSpace === identifier.toLowerCase()) {
+        return true;
+      }
+      
+      return false;
+    });
     
     if (user) {
-      // En una app real, verificaríamos la contraseña con el backend
-      // Por ahora, aceptamos cualquier contraseña para usuarios existentes
       localStorage.setItem('currentUser', JSON.stringify(user));
       localStorage.setItem('token', 'simulated-token');
       this.currentUserSubject.next(user);
@@ -41,8 +55,7 @@ export class AuthService {
   register(user: User): boolean {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
     
-    // Verificar si el usuario ya existe
-    if (users.find((u: User) => u.email === user.email)) {
+    if (users.find((u: User) => u.email.toLowerCase() === user.email.toLowerCase())) {
       return false;
     }
 
@@ -65,7 +78,6 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  // Método para compatibilidad con código existente
   get currentUserValue(): User | null {
     return this.currentUserSubject.value;
   }

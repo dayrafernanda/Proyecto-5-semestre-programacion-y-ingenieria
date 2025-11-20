@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   credentials = {
-    email: '',
+    identifier: '',
     password: ''
   };
   
@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Si ya está autenticado, redirigir al dashboard
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
     }
@@ -34,7 +33,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.errorMessage = '';
     
-    if (this.authService.login(this.credentials.email, this.credentials.password)) {
+    if (this.authService.login(this.credentials.identifier, this.credentials.password)) {
       this.router.navigate(['/dashboard']);
     } else {
       this.errorMessage = 'Credenciales inválidas. Por favor, intente nuevamente.';
