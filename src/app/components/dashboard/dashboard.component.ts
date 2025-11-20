@@ -38,7 +38,6 @@ export class DashboardComponent implements OnInit {
 
   loadDashboardItems() {
     const allItems: DashboardItem[] = [
-      // MÓDULOS PARA ESTUDIANTES
       {
         title: 'Nuevo Proyecto',
         description: 'Crear un nuevo proyecto de grado',
@@ -55,8 +54,15 @@ export class DashboardComponent implements OnInit {
         roles: ['student'],
         color: 'info'
       },
+      {
+        title: 'Mis Entregas',
+        description: 'Gestionar mis entregas de proyecto',
+        icon: 'bi-upload',
+        route: '/mis-entregas',
+        roles: ['student'],
+        color: 'primary'
+      },
 
-      // MÓDULOS PARA DOCENTES
       {
         title: 'Revisar Proyectos',
         description: 'Revisar proyectos asignados',
@@ -65,10 +71,33 @@ export class DashboardComponent implements OnInit {
         roles: ['teacher', 'tutor'],
         color: 'warning'
       },
-
-      // MÓDULOS PARA COORDINADORES
       {
-        title: 'Auditoría',
+        title: 'Proyectos Asignados',
+        description: 'Ver mis proyectos asignados',
+        icon: 'bi-list-check',
+        route: '/proyectos-asignados',
+        roles: ['teacher', 'tutor'],
+        color: 'primary'
+      },
+      {
+        title: 'Calificaciones',
+        description: 'Gestionar calificaciones de proyectos',
+        icon: 'bi-check-circle',
+        route: '/calificaciones',
+        roles: ['teacher', 'tutor'],
+        color: 'info'
+      },
+      {
+        title: 'Rúbricas de Evaluación',
+        description: 'Configurar criterios de evaluación',
+        icon: 'bi-clipboard-check',
+        route: '/rubricas',
+        roles: ['teacher', 'tutor'],
+        color: 'secondary'
+      },
+
+      {
+        title: 'Auditoría de Proyectos',
         description: 'Validar y auditar proyectos',
         icon: 'bi-shield-check',
         route: '/auditoria',
@@ -83,13 +112,45 @@ export class DashboardComponent implements OnInit {
         roles: ['coordinator'],
         color: 'primary'
       },
+      {
+        title: 'Asignación de Docentes',
+        description: 'Asignar docentes a proyectos',
+        icon: 'bi-person-plus',
+        route: '/asignacion-docentes',
+        roles: ['coordinator'],
+        color: 'info'
+      },
+      {
+        title: 'Reportes Institucionales',
+        description: 'Generar reportes académicos',
+        icon: 'bi-graph-up',
+        route: '/reportes-institucionales',
+        roles: ['coordinator'],
+        color: 'success'
+      },
 
-      // MÓDULOS PARA ADMINISTRADORES
+      {
+        title: 'Seguimiento de Proyectos',
+        description: 'Seguimiento de proyectos tutorados',
+        icon: 'bi-binoculars',
+        route: '/seguimiento-proyectos',
+        roles: ['tutor'],
+        color: 'info'
+      },
+      {
+        title: 'Retroalimentación',
+        description: 'Proporcionar retroalimentación',
+        icon: 'bi-chat-left-text',
+        route: '/retroalimentacion',
+        roles: ['tutor'],
+        color: 'warning'
+      },
+
       {
         title: 'Gestión de Usuarios',
         description: 'Administrar cuentas de usuario',
         icon: 'bi-people',
-        route: '/gestion-usuarios',
+        route: '/user-management',
         roles: ['admin'],
         color: 'dark'
       },
@@ -97,7 +158,7 @@ export class DashboardComponent implements OnInit {
         title: 'Auditoría del Sistema',
         description: 'Monitoreo del sistema',
         icon: 'bi-graph-up',
-        route: '/auditoria-sistema',
+        route: '/audit-system',
         roles: ['admin'],
         color: 'danger'
       },
@@ -105,12 +166,27 @@ export class DashboardComponent implements OnInit {
         title: 'Configuración Académica',
         description: 'Configuración del sistema',
         icon: 'bi-gear',
-        route: '/configuracion-academica',
+        route: '/academic-config',
+        roles: ['admin'],
+        color: 'secondary'
+      },
+      {
+        title: 'Reportes y Análisis',
+        description: 'Generar reportes estadísticos',
+        icon: 'bi-graph-up',
+        route: '/reports',
+        roles: ['admin'],
+        color: 'success'
+      },
+      {
+        title: 'Sistema de Notificaciones',
+        description: 'Gestionar notificaciones',
+        icon: 'bi-bell',
+        route: '/notifications',
         roles: ['admin'],
         color: 'secondary'
       },
 
-      // MÓDULOS PARA TODOS LOS ROLES
       {
         title: 'Repositorio',
         description: 'Proyectos aprobados de referencia',
@@ -118,6 +194,14 @@ export class DashboardComponent implements OnInit {
         route: '/repositorio',
         roles: ['student', 'teacher', 'coordinator', 'admin', 'tutor'],
         color: 'secondary'
+      },
+      {
+        title: 'Perfil de Usuario',
+        description: 'Gestionar mi perfil y configuración',
+        icon: 'bi-person',
+        route: '/perfil',
+        roles: ['student', 'teacher', 'coordinator', 'admin', 'tutor'],
+        color: 'info'
       }
     ];
 

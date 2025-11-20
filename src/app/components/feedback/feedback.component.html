@@ -1,0 +1,139 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark">
+          <h4 class="mb-0">
+            <i class="bi bi-chat-left-text me-2"></i>
+            Retroalimentación
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Sistema de retroalimentación para proyectos estudiantiles.
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+              <div class="card text-center h-100">
+                <div class="card-body">
+                  <i class="bi bi-chat-square-text display-4 text-primary"></i>
+                  <h5 class="mt-2">Feedback Pendiente</h5>
+                  <h3 class="text-primary">7</h3>
+                  <p class="text-muted">Por enviar</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card text-center h-100">
+                <div class="card-body">
+                  <i class="bi bi-check-circle display-4 text-success"></i>
+                  <h5 class="mt-2">Enviados</h5>
+                  <h3 class="text-success">22</h3>
+                  <p class="text-muted">Este periodo</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card text-center h-100">
+                <div class="card-body">
+                  <i class="bi bi-arrow-clockwise display-4 text-info"></i>
+                  <h5 class="mt-2">Seguimiento</h5>
+                  <h3 class="text-info">5</h3>
+                  <p class="text-muted">Requieren respuesta</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Enviar Retroalimentación</h6>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="form-label">Proyecto</label>
+                    <select class="form-select">
+                      <option selected>Seleccionar proyecto...</option>
+                      <option>Sistema IoT Agricultura - María González</option>
+                      <option>App Salud Mental - Juan Pérez</option>
+                      <option>Plataforma E-learning - Laura Martínez</option>
+                      <option>Sistema Biblioteca - Carlos Rodríguez</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Tipo de Feedback</label>
+                    <select class="form-select">
+                      <option selected>General</option>
+                      <option>Técnico</option>
+                      <option>Documentación</option>
+                      <option>Presentación</option>
+                      <option>Urgente</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Mensaje</label>
+                    <textarea class="form-control" rows="5" placeholder="Escribe tu retroalimentación detallada..."></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Prioridad</label>
+                    <select class="form-select">
+                      <option>Baja</option>
+                      <option selected>Media</option>
+                      <option>Alta</option>
+                      <option>Urgente</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-warning w-100">
+                    <i class="bi bi-send me-2"></i>Enviar Retroalimentación
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Historial de Feedback</h6>
+                </div>
+                <div class="card-body">
+                  <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">Sistema IoT Agricultura</h6>
+                        <small class="text-muted">Hace 2 días</small>
+                      </div>
+                      <p class="mb-1">Excelente progreso en la implementación del módulo de sensores.</p>
+                      <small class="text-muted">Para: María González</small>
+                      <span class="badge bg-success ms-2">Enviado</span>
+                    </div>
+                    <div class="list-group-item">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">App Salud Mental</h6>
+                        <small class="text-muted">Hace 4 días</small>
+                      </div>
+                      <p class="mb-1">Revisar la usabilidad de la interfaz, considerar mejoras en navegación.</p>
+                      <small class="text-muted">Para: Juan Pérez</small>
+                      <span class="badge bg-warning ms-2">Pendiente Respuesta</span>
+                    </div>
+                    <div class="list-group-item">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">Plataforma E-learning</h6>
+                        <small class="text-muted">Hace 1 semana</small>
+                      </div>
+                      <p class="mb-1">Documentación técnica necesita expansión en la sección de API.</p>
+                      <small class="text-muted">Para: Laura Martínez</small>
+                      <span class="badge bg-success ms-2">Enviado</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

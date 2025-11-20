@@ -1,38 +1,28 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { UserRole } from '../models/user.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class RoleGuard implements CanActivate {
+export const RoleGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  const currentUser = authService.getCurrentUser();
+  const requiredRoles = route.data?.['roles'] as string[];
 
-  canActivate(route: ActivatedRouteSnapshot): boolean {
-
-    const currentUser = this.authService.currentUserValue;
-    const requiredRoles = route.data['roles'] as UserRole[] | undefined;
-
-    if (!currentUser) {
-      this.router.navigate(['/login']);
-      return false;
-    }
-
-    if (!requiredRoles || requiredRoles.length === 0) {
-      return true;
-    }
-
-    if (requiredRoles.includes(currentUser.role)) {
-      return true;
-    }
-
-    console.warn(`ACCESS DENIED: role "${currentUser.role}" cannot access this route.`);
-    this.router.navigate(['/acceso-denegado']); 
+  if (!currentUser) {
+    router.navigate(['/login']);
     return false;
   }
-}
+
+  if (!requiredRoles || requiredRoles.length === 0) {
+    return true;
+  }
+
+  if (requiredRoles.includes(currentUser.role)) {
+    return true;
+  }
+
+  // Si no tiene el rol requerido, redirigir al dashboard
+  router.navigate(['/dashboard']);
+  return false;
+};

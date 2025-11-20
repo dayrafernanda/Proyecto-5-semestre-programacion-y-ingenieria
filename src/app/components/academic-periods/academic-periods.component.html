@@ -1,27 +1,253 @@
-<div class="container mt-4">
+<div class="container-fluid">
   <div class="row">
     <div class="col-12">
-      <div class="card shadow-sm border-0">
-        <div class="card-header bg-success text-white">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
           <h4 class="mb-0">
-            <i class="bi bi-grid me-2"></i>
-            {{ title }}
+            <i class="bi bi-calendar me-2"></i>
+            Periodos Académicos
           </h4>
         </div>
         <div class="card-body">
           <div class="alert alert-info">
             <i class="bi bi-info-circle me-2"></i>
-            Módulo <strong>{{ title }}</strong> en desarrollo. 
-            Esta funcionalidad estará disponible próximamente.
+            Configuración y gestión de periodos académicos, fechas importantes y calendario del sistema.
           </div>
-          
-          <div class="text-center py-4">
-            <i class="bi bi-tools display-1 text-muted"></i>
-            <h5 class="mt-3 text-muted">Página en construcción</h5>
-            <p class="text-muted">Estamos trabajando para implementar todas las funcionalidades.</p>
-            <a routerLink="/dashboard" class="btn btn-success">
-              <i class="bi bi-arrow-left me-1"></i>Volver al Dashboard
-            </a>
+
+          <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+              <div class="card text-center h-100">
+                <div class="card-body">
+                  <i class="bi bi-play-circle display-4 text-success"></i>
+                  <h5 class="mt-2">Periodo Activo</h5>
+                  <h3 class="text-success">2024-2</h3>
+                  <p class="text-muted">Semestre actual</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card text-center h-100">
+                <div class="card-body">
+                  <i class="bi bi-clock display-4 text-warning"></i>
+                  <h5 class="mt-2">Días Restantes</h5>
+                  <h3 class="text-warning">45</h3>
+                  <p class="text-muted">Fin del periodo</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card text-center h-100">
+                <div class="card-body">
+                  <i class="bi bi-calendar-check display-4 text-info"></i>
+                  <h5 class="mt-2">Proyectos Activos</h5>
+                  <h3 class="text-info">38</h3>
+                  <p class="text-muted">Este periodo</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card text-center h-100">
+                <div class="card-body">
+                  <i class="bi bi-people display-4 text-primary"></i>
+                  <h5 class="mt-2">Estudiantes</h5>
+                  <h3 class="text-primary">142</h3>
+                  <p class="text-muted">Inscritos</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Periodos Académicos</h6>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Periodo</th>
+                          <th>Fecha Inicio</th>
+                          <th>Fecha Fin</th>
+                          <th>Estado</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2024-2</td>
+                          <td>01/08/2024</td>
+                          <td>15/12/2024</td>
+                          <td><span class="badge bg-success">Activo</span></td>
+                          <td>
+                            <button class="btn btn-sm btn-outline-primary me-1">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-info">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2024-1</td>
+                          <td>15/01/2024</td>
+                          <td>30/06/2024</td>
+                          <td><span class="badge bg-secondary">Finalizado</span></td>
+                          <td>
+                            <button class="btn btn-sm btn-outline-info">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2023-2</td>
+                          <td>01/08/2023</td>
+                          <td>15/12/2023</td>
+                          <td><span class="badge bg-secondary">Finalizado</span></td>
+                          <td>
+                            <button class="btn btn-sm btn-outline-info">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2025-1</td>
+                          <td>15/01/2025</td>
+                          <td>30/06/2025</td>
+                          <td><span class="badge bg-warning">Planificado</span></td>
+                          <td>
+                            <button class="btn btn-sm btn-outline-primary me-1">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-info">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Fechas Importantes - Periodo 2024-2</h6>
+                </div>
+                <div class="card-body">
+                  <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <i class="bi bi-calendar-plus text-primary me-2"></i>
+                        Inscripción de Proyectos
+                      </div>
+                      <div>
+                        <span class="text-muted">01/08 - 15/08/2024</span>
+                        <span class="badge bg-success ms-2">Completado</span>
+                      </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <i class="bi bi-clock text-warning me-2"></i>
+                        Desarrollo de Proyectos
+                      </div>
+                      <div>
+                        <span class="text-muted">16/08 - 30/11/2024</span>
+                        <span class="badge bg-warning ms-2">En Curso</span>
+                      </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <i class="bi bi-upload text-info me-2"></i>
+                        Entrega Final
+                      </div>
+                      <div>
+                        <span class="text-muted">01/12 - 10/12/2024</span>
+                        <span class="badge bg-secondary ms-2">Próximo</span>
+                      </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        Evaluación Final
+                      </div>
+                      <div>
+                        <span class="text-muted">11/12 - 15/12/2024</span>
+                        <span class="badge bg-secondary ms-2">Próximo</span>
+                      </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <i class="bi bi-award text-danger me-2"></i>
+                        Publicación de Resultados
+                      </div>
+                      <div>
+                        <span class="text-muted">20/12/2024</span>
+                        <span class="badge bg-secondary ms-2">Próximo</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Configuración de Periodo</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label class="form-label">Nombre del Periodo</label>
+                        <input type="text" class="form-control" value="2024-2" readonly>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Fecha de Inicio</label>
+                        <input type="date" class="form-control" value="2024-08-01">
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Fecha de Fin</label>
+                        <input type="date" class="form-control" value="2024-12-15">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label class="form-label">Estado del Periodo</label>
+                        <select class="form-select">
+                          <option selected>Activo</option>
+                          <option>Planificado</option>
+                          <option>Finalizado</option>
+                          <option>Cancelado</option>
+                        </select>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Límite de Proyectos</label>
+                        <input type="number" class="form-control" value="50">
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Nota Mínima Aprobación</label>
+                        <input type="number" class="form-control" value="3.0" step="0.1">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-end">
+                    <button class="btn btn-primary me-2">
+                      <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+                    </button>
+                    <button class="btn btn-outline-secondary">
+                      <i class="bi bi-plus-circle me-2"></i>Nuevo Periodo
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

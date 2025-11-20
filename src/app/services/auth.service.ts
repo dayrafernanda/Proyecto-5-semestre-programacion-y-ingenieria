@@ -1,165 +1,72 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { User, LoginCredentials, RegisterData, UserRole, ROLE_PERMISSIONS } from '../models/user.model';
+import { BehaviorSubject } from 'rxjs';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser: Observable<User | null>;
-  private apiUrl = environment.apiUrl;
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser = this.currentUserSubject.asObservable();
 
-  private demoUsers: User[] = [
-    // ESTUDIANTES
-    {
-      id: '1',
-      username: 'estudiante',
-      email: 'estudiante@institucion.edu.co',
-      firstName: 'Ana',
-      lastName: 'García',
-      role: 'student',
-      isActive: true,
-      createdAt: new Date(),
-      studentId: '202310001'
-    },
-    {
-      id: '2',
-      username: 'estudiante2',
-      email: 'estudiante2@institucion.edu.co',
-      firstName: 'Carlos',
-      lastName: 'Rodríguez',
-      role: 'student',
-      isActive: true,
-      createdAt: new Date(),
-      studentId: '202310002'
-    },
+  constructor() {
+    this.loadCurrentUser();
+  }
 
-    // DOCENTES
-    {
-      id: '3',
-      username: 'docente',
-      email: 'docente@institucion.edu.co',
-      firstName: 'María',
-      lastName: 'López',
-      role: 'teacher',
-      isActive: true,
-      createdAt: new Date(),
-      specialization: 'Desarrollo de Software'
-    },
-    {
-      id: '4',
-      username: 'docente2',
-      email: 'docente2@institucion.edu.co',
-      firstName: 'Roberto',
-      lastName: 'Fernández',
-      role: 'teacher',
-      isActive: true,
-      createdAt: new Date(),
-      specialization: 'Redes y Telecomunicaciones'
-    },
-
-    // COORDINADORES
-    {
-      id: '5',
-      username: 'coordinador',
-      email: 'coordinador@institucion.edu.co',
-      firstName: 'Laura',
-      lastName: 'Martínez',
-      role: 'coordinator',
-      isActive: true,
-      createdAt: new Date()
-    },
-
-    // ADMINISTRADORES
-    {
-      id: '6',
-      username: 'admin',
-      email: 'admin@institucion.edu.co',
-      firstName: 'Admin',
-      lastName: 'Sistema',
-      role: 'admin',
-      isActive: true,
-      createdAt: new Date()
-    },
-
-    // TUTORES
-    {
-      id: '7',
-      username: 'tutor',
-      email: 'tutor@institucion.edu.co',
-      firstName: 'David',
-      lastName: 'Gómez',
-      role: 'tutor',
-      isActive: true,
-      createdAt: new Date(),
-      specialization: 'Metodologías Ágiles'
+  private loadCurrentUser() {
+    const userData = localStorage.getItem('currentUser');
+    if (userData) {
+      const user = JSON.parse(userData);
+      this.currentUserSubject.next(user);
     }
-  ];
-
-  constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<User | null>(
-      JSON.parse(localStorage.getItem('currentUser') || 'null')
-    );
-    this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  public get currentUserValue(): User | null {
-    return this.currentUserSubject.value;
+  login(email: string, password: string): boolean {
+    // Simular verificación de credenciales
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find((u: User) => u.email === email);
+    
+    if (user) {
+      // En una app real, verificaríamos la contraseña con el backend
+      // Por ahora, aceptamos cualquier contraseña para usuarios existentes
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem('token', 'simulated-token');
+      this.currentUserSubject.next(user);
+      return true;
+    }
+    
+    return false;
   }
 
-  public get currentUserPermissions() {
-    const user = this.currentUserValue;
-    return user ? ROLE_PERMISSIONS[user.role] : null;
+  register(user: User): boolean {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    
+    // Verificar si el usuario ya existe
+    if (users.find((u: User) => u.email === user.email)) {
+      return false;
+    }
+
+    users.push(user);
+    localStorage.setItem('users', JSON.stringify(users));
+    return true;
   }
 
-  login(credentials: LoginCredentials): Observable<User> {
-    return of(credentials).pipe(
-      map(cred => {
-        const user = this.demoUsers.find(u => 
-          u.username === cred.username && 
-          this.validatePassword(cred.username, cred.password)
-        );
-
-        if (!user) {
-          throw new Error('Credenciales inválidas');
-        }
-
-        const userWithToken = {
-          ...user,
-          token: 'demo-token-' + user.id
-        };
-
-        localStorage.setItem('currentUser', JSON.stringify(userWithToken));
-        this.currentUserSubject.next(userWithToken);
-        return userWithToken;
-      })
-    );
-  }
-
-  private validatePassword(username: string, password: string): boolean {
-    return password === username;
-  }
-
-  register(userData: RegisterData): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/auth/register`, userData);
-  }
-
-  logout(): void {
+  logout() {
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
     this.currentUserSubject.next(null);
   }
 
-  hasPermission(permission: keyof typeof ROLE_PERMISSIONS.student): boolean {
-    const permissions = this.currentUserPermissions;
-    return permissions ? permissions[permission] : false;
+  isAuthenticated(): boolean {
+    return localStorage.getItem('token') !== null;
   }
 
-  isInRole(roles: UserRole[]): boolean {
-    const user = this.currentUserValue;
-    return user ? roles.includes(user.role) : false;
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+  // Método para compatibilidad con código existente
+  get currentUserValue(): User | null {
+    return this.currentUserSubject.value;
   }
 }
