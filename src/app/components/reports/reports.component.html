@@ -21,40 +21,102 @@
                   <i class="bi bi-people display-4 text-primary"></i>
                   <h5 class="mt-2">Usuarios</h5>
                   <p class="text-muted">Reportes de usuarios</p>
-                  <button class="btn btn-outline-primary btn-sm">Generar</button>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary btn-sm" (click)="generateReport('users', 'pdf')" 
+                            [disabled]="loading">
+                      <i class="bi bi-file-pdf"></i>
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" (click)="generateReport('users', 'excel')"
+                            [disabled]="loading">
+                      <i class="bi bi-file-spreadsheet"></i>
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" (click)="previewReport('users')"
+                            [disabled]="loading">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+
             <div class="col-md-3 mb-3">
               <div class="card text-center h-100">
                 <div class="card-body">
                   <i class="bi bi-folder display-4 text-info"></i>
                   <h5 class="mt-2">Proyectos</h5>
                   <p class="text-muted">Estadísticas de proyectos</p>
-                  <button class="btn btn-outline-info btn-sm">Generar</button>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary btn-sm" (click)="generateReport('projects', 'pdf')"
+                            [disabled]="loading">
+                      <i class="bi bi-file-pdf"></i>
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" (click)="generateReport('projects', 'excel')"
+                            [disabled]="loading">
+                      <i class="bi bi-file-spreadsheet"></i>
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" (click)="previewReport('projects')"
+                            [disabled]="loading">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+
             <div class="col-md-3 mb-3">
               <div class="card text-center h-100">
                 <div class="card-body">
                   <i class="bi bi-bar-chart display-4 text-warning"></i>
                   <h5 class="mt-2">Académico</h5>
                   <p class="text-muted">Métricas académicas</p>
-                  <button class="btn btn-outline-warning btn-sm">Generar</button>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary btn-sm" (click)="generateReport('academic', 'pdf')"
+                            [disabled]="loading">
+                      <i class="bi bi-file-pdf"></i>
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" (click)="generateReport('academic', 'excel')"
+                            [disabled]="loading">
+                      <i class="bi bi-file-spreadsheet"></i>
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" (click)="previewReport('academic')"
+                            [disabled]="loading">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+
             <div class="col-md-3 mb-3">
               <div class="card text-center h-100">
                 <div class="card-body">
                   <i class="bi bi-activity display-4 text-danger"></i>
                   <h5 class="mt-2">Sistema</h5>
                   <p class="text-muted">Rendimiento del sistema</p>
-                  <button class="btn btn-outline-danger btn-sm">Generar</button>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary btn-sm" (click)="generateReport('system', 'pdf')"
+                            [disabled]="loading">
+                      <i class="bi bi-file-pdf"></i>
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" (click)="generateReport('system', 'excel')"
+                            [disabled]="loading">
+                      <i class="bi bi-file-spreadsheet"></i>
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" (click)="previewReport('system')"
+                            [disabled]="loading">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div *ngIf="loading" class="text-center mb-4">
+            <div class="spinner-border text-success" role="status">
+              <span class="visually-hidden">Generando reporte...</span>
+            </div>
+            <p class="mt-2 text-muted">Generando reporte, por favor espere...</p>
           </div>
 
           <div class="row">
@@ -70,21 +132,36 @@
                         <i class="bi bi-file-text text-primary me-2"></i>
                         Reporte de Usuarios Activos
                       </div>
-                      <small class="text-muted">Hace 2 días</small>
+                      <div>
+                        <small class="text-muted me-2">Hace 2 días</small>
+                        <button class="btn btn-outline-secondary btn-sm" (click)="downloadRecentReport('users')">
+                          <i class="bi bi-download"></i>
+                        </button>
+                      </div>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-center">
                       <div>
                         <i class="bi bi-file-text text-info me-2"></i>
                         Proyectos por Estado
                       </div>
-                      <small class="text-muted">Hace 1 semana</small>
+                      <div>
+                        <small class="text-muted me-2">Hace 1 semana</small>
+                        <button class="btn btn-outline-secondary btn-sm" (click)="downloadRecentReport('projects')">
+                          <i class="bi bi-download"></i>
+                        </button>
+                      </div>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-center">
                       <div>
                         <i class="bi bi-file-text text-success me-2"></i>
                         Métricas Académicas
                       </div>
-                      <small class="text-muted">Hace 2 semanas</small>
+                      <div>
+                        <small class="text-muted me-2">Hace 2 semanas</small>
+                        <button class="btn btn-outline-secondary btn-sm" (click)="downloadRecentReport('academic')">
+                          <i class="bi bi-download"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -99,22 +176,22 @@
                   <div class="row text-center">
                     <div class="col-6 mb-3">
                       <div class="border-end">
-                        <h4 class="text-primary mb-1">156</h4>
+                        <h4 class="text-primary mb-1">{{ stats.totalUsers }}</h4>
                         <small class="text-muted">Usuarios Totales</small>
                       </div>
                     </div>
                     <div class="col-6 mb-3">
-                      <h4 class="text-success mb-1">42</h4>
+                      <h4 class="text-success mb-1">{{ stats.activeProjects }}</h4>
                       <small class="text-muted">Proyectos Activos</small>
                     </div>
                     <div class="col-6">
                       <div class="border-end">
-                        <h4 class="text-warning mb-1">78%</h4>
+                        <h4 class="text-warning mb-1">{{ stats.approvalRate }}%</h4>
                         <small class="text-muted">Tasa de Aprobación</small>
                       </div>
                     </div>
                     <div class="col-6">
-                      <h4 class="text-info mb-1">95%</h4>
+                      <h4 class="text-info mb-1">{{ stats.systemUsage }}%</h4>
                       <small class="text-muted">Uso del Sistema</small>
                     </div>
                   </div>
@@ -123,6 +200,29 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">{{ previewTitle }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div [innerHTML]="previewContent"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="downloadCurrentPreview()">
+          <i class="bi bi-download me-1"></i>Descargar PDF
+        </button>
+        <button type="button" class="btn btn-success" (click)="downloadCurrentPreviewExcel()">
+          <i class="bi bi-download me-1"></i>Descargar Excel
+        </button>
       </div>
     </div>
   </div>

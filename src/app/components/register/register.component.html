@@ -68,13 +68,14 @@
                 <option value="teacher">Docente</option>
                 <option value="coordinator">Coordinador</option>
                 <option value="tutor">Tutor</option>
+                <option value="admin">Administrador</option>
+
               </select>
               <div *ngIf="role.invalid && role.touched" class="text-danger small">
                 Debe seleccionar un tipo de usuario
               </div>
             </div>
 
-            <!-- Campos adicionales según el rol -->
             <div *ngIf="user.role === 'student'" class="mb-3">
               <label class="form-label">ID Estudiantil</label>
               <input type="text" class="form-control" name="studentId" 
@@ -93,12 +94,22 @@
                      [(ngModel)]="user.department" #department="ngModel">
             </div>
 
+            <div *ngIf="user.role === 'admin'" class="mb-3">
+              <div class="alert alert-info">
+                <small>
+                  <i class="bi bi-info-circle me-1"></i>
+                  El rol de administrador tiene acceso completo al sistema y permisos para gestionar todos los usuarios y configuraciones.
+                </small>
+              </div>
+            </div>
+
             <button type="submit" class="btn btn-success w-100 py-2" 
                     [disabled]="registerForm.invalid || user.password !== confirmPassword">
               <i class="bi bi-person-plus me-2"></i>
               Crear Cuenta
             </button>
           </form>
+
 
           <div class="text-center mt-4">
             <p class="mb-0">

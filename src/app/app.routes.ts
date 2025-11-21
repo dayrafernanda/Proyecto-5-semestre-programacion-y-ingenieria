@@ -12,8 +12,8 @@ export const routes: Routes = [
   },
 
   {
-    path: 'register',
-    loadComponent: () =>
+  path: 'register',
+  loadComponent: () =>
       import('./components/register/register.component').then((m) => m.RegisterComponent),
   },
 
@@ -26,7 +26,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
 
-  // ========== RUTAS PARA ESTUDIANTES ==========
   {
     path: 'nuevo-proyecto',
     loadComponent: () =>
@@ -63,7 +62,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
 
-  // ========== RUTAS PARA DOCENTES ==========
   {
     path: 'revisar-proyectos',
     loadComponent: () =>
@@ -101,7 +99,6 @@ export const routes: Routes = [
     data: { roles: ['teacher', 'tutor'] },
   },
 
-  // ========== RUTAS PARA COORDINADORES ==========
   {
     path: 'auditoria',
     loadComponent: () =>
@@ -139,7 +136,6 @@ export const routes: Routes = [
     data: { roles: ['coordinator'] },
   },
 
-  // ========== RUTAS PARA TUTORES ==========
   {
     path: 'seguimiento-proyectos',
     loadComponent: () =>
@@ -159,7 +155,6 @@ export const routes: Routes = [
     data: { roles: ['tutor'] },
   },
 
-  // ========== RUTAS PARA ADMINISTRADORES ==========
   {
     path: 'user-management',
     loadComponent: () =>
@@ -206,7 +201,6 @@ export const routes: Routes = [
     data: { roles: ['admin'] },
   },
 
-  // ========== RUTAS PARA TODOS ==========
   {
     path: 'repositorio',
     loadComponent: () =>
