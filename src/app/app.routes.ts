@@ -211,4 +211,9 @@ export const routes: Routes = [
   },
 
   { path: '**', redirectTo: '/dashboard' },
+
+  { 
+    path: 'novedades', 
+    loadChildren: () => import('./modules/novedades/novedades.module').then(m => m.NovedadesModule) 
+  },
 ];

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 interface StudentProject {
   id: string;
@@ -16,7 +17,7 @@ interface StudentProject {
 @Component({
   selector: 'app-portfolio',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './portfolio.component.html',
   styleUrl: './portfolio.component.scss'
 })
@@ -57,6 +58,39 @@ export class PortfolioComponent implements OnInit {
     }
   ];
 
+  filteredProjects: StudentProject[] = [];
+  filterStatus: string = 'all';
+  sortOrder: 'recent' | 'oldest' = 'recent';
+
+  ngOnInit() {
+    this.sortProjects();
+    this.filterProjects();
+  }
+
+  sortProjects() {
+    this.studentProjects.sort((a, b) => {
+      const dateA = new Date(a.submittedDate).getTime();
+      const dateB = new Date(b.submittedDate).getTime();
+      return this.sortOrder === 'recent' ? dateB - dateA : dateA - dateB;
+    });
+    this.filterProjects();
+  }
+
+  toggleSortOrder() {
+    this.sortOrder = this.sortOrder === 'recent' ? 'oldest' : 'recent';
+    this.sortProjects();
+  }
+
+  filterProjects() {
+    if (this.filterStatus === 'all') {
+      this.filteredProjects = [...this.studentProjects];
+    } else {
+      this.filteredProjects = this.studentProjects.filter(project => 
+        project.status === this.filterStatus
+      );
+    }
+  }
+
   get totalProjectsCount(): number {
     return this.studentProjects.length;
   }
@@ -76,8 +110,6 @@ export class PortfolioComponent implements OnInit {
   get draftProjectsCount(): number {
     return this.studentProjects.filter(p => p.status === 'draft').length;
   }
-
-  ngOnInit() {}
 
   getStatusBadgeClass(status: string): string {
     const statusClasses: { [key: string]: string } = {
@@ -109,5 +141,18 @@ export class PortfolioComponent implements OnInit {
     if (diffDays === 0) return 'Hoy';
     if (diffDays === 1) return 'Ayer';
     return `Hace ${diffDays} días`;
+  }
+
+  loadProjectsFromStorage() {
+    try {
+      const savedProjects = localStorage.getItem('studentProjects');
+      if (savedProjects) {
+        const parsedProjects = JSON.parse(savedProjects);
+        this.studentProjects = [...this.studentProjects, ...parsedProjects];
+        this.sortProjects();
+      }
+    } catch (error) {
+      console.error('Error loading projects from storage:', error);
+    }
   }
 }

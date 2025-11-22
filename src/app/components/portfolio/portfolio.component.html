@@ -3,10 +3,18 @@
     <div class="col-12">
       <div class="card shadow-sm border-0">
         <div class="card-header bg-success text-white">
-          <h4 class="mb-0">
-            <i class="bi bi-folder me-2"></i>
-            Mi Portafolio de Proyectos
-          </h4>
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+              <i class="bi bi-folder me-2"></i>
+              Mi Portafolio de Proyectos
+            </h4>
+            <div class="btn-group">
+              <button class="btn btn-light btn-sm" (click)="toggleSortOrder()">
+                <i class="bi" [class.bi-sort-down]="sortOrder === 'recent'" [class.bi-sort-up]="sortOrder === 'oldest'"></i>
+                {{ sortOrder === 'recent' ? 'Más Recientes' : 'Más Antiguos' }}
+              </button>
+            </div>
+          </div>
         </div>
         <div class="card-body">
           <div class="row mb-4">
@@ -44,20 +52,44 @@
             </div>
           </div>
 
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Filtrar por estado:</label>
+              <select class="form-select" [(ngModel)]="filterStatus" (change)="filterProjects()">
+                <option value="all">Todos los proyectos</option>
+                <option value="draft">Borradores</option>
+                <option value="under_review">En Revisión</option>
+                <option value="corrections_required">Correcciones Requeridas</option>
+                <option value="approved">Aprobados</option>
+                <option value="rejected">Rechazados</option>
+              </select>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <small class="text-muted">
+                Mostrando {{ filteredProjects.length }} de {{ totalProjectsCount }} proyectos
+              </small>
+            </div>
+          </div>
+
           <div class="table-responsive">
             <table class="table table-hover">
               <thead class="table-light">
                 <tr>
                   <th>Proyecto</th>
                   <th>Estado</th>
-                  <th>Fecha Envío</th>
+                  <th>
+                    <span class="sortable-header" (click)="toggleSortOrder()">
+                      Fecha Envío 
+                      <i class="bi ms-1" [class.bi-sort-down]="sortOrder === 'recent'" [class.bi-sort-up]="sortOrder === 'oldest'"></i>
+                    </span>
+                  </th>
                   <th>Revisor</th>
                   <th>Calificación</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let project of studentProjects">
+                <tr *ngFor="let project of filteredProjects">
                   <td>
                     <strong>{{ project.title }}</strong>
                     <br>
@@ -99,6 +131,14 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <div *ngIf="filteredProjects.length === 0" class="text-center py-4">
+            <i class="bi bi-search display-4 text-muted"></i>
+            <p class="mt-2 text-muted">No se encontraron proyectos con el filtro seleccionado</p>
+            <button class="btn btn-outline-secondary" (click)="filterStatus = 'all'; filterProjects()">
+              Mostrar todos los proyectos
+            </button>
           </div>
 
           <div class="alert alert-warning mt-4" *ngIf="correctionsRequiredProjectsCount > 0">
