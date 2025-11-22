@@ -9,6 +9,9 @@
               Mi Portafolio de Proyectos
             </h4>
             <div class="btn-group">
+              <button class="btn btn-light btn-sm" (click)="refreshProjects()" title="Actualizar lista">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
               <button class="btn btn-light btn-sm" (click)="toggleSortOrder()">
                 <i class="bi" [class.bi-sort-down]="sortOrder === 'recent'" [class.bi-sort-up]="sortOrder === 'oldest'"></i>
                 {{ sortOrder === 'recent' ? 'Más Recientes' : 'Más Antiguos' }}
@@ -64,10 +67,13 @@
                 <option value="rejected">Rechazados</option>
               </select>
             </div>
-            <div class="col-md-6 d-flex align-items-end">
+            <div class="col-md-6 d-flex align-items-end justify-content-between">
               <small class="text-muted">
                 Mostrando {{ filteredProjects.length }} de {{ totalProjectsCount }} proyectos
               </small>
+              <!-- <button class="btn btn-outline-danger btn-sm" (click)="clearProjects()" title="Limpiar proyectos (testing)">
+                <i class="bi bi-trash"></i> Limpiar
+              </button> -->
             </div>
           </div>
 
@@ -94,6 +100,9 @@
                     <strong>{{ project.title }}</strong>
                     <br>
                     <small class="text-muted">ID: {{ project.id }}</small>
+                    <div *ngIf="project.knowledgeArea" class="mt-1">
+                      <span class="badge bg-info">{{ project.knowledgeArea }}</span>
+                    </div>
                   </td>
                   <td>
                     <span class="badge {{ getStatusBadgeClass(project.status) }}">

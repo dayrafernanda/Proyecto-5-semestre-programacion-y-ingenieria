@@ -1,0 +1,117 @@
+{
+  "configVersion": 1,
+  "timestamp": 1763770537559,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/179.1c12e5a3a63a2194.js",
+        "/205.9a8d596cd1080786.js",
+        "/245.3f38b800011aabe7.js",
+        "/286.cb230bca6f56eb1b.js",
+        "/291.f56da12f524d400f.js",
+        "/31.85c2bf4aa9b1711d.js",
+        "/329.f329b52e745e935c.js",
+        "/341.a5eb91c15e196737.js",
+        "/365.3e7b5df9a7e26306.js",
+        "/423.115685b37de49670.js",
+        "/441.1280757b39cbb071.js",
+        "/466.9201f51d4a76cfc7.js",
+        "/507.5b2a4133694286d8.js",
+        "/581.0d88de26f1288acd.js",
+        "/593.adff1b10591660d6.js",
+        "/621.f481689c357811be.js",
+        "/703.6161be63a8dbf1df.js",
+        "/73.9729b8de0c4ca797.js",
+        "/842.dbe5d78de3d28e52.js",
+        "/85.7365945367bb2939.js",
+        "/873.284527a641fb15eb.js",
+        "/885.2c6296a9c5482678.js",
+        "/905.d4329688f50f46a9.js",
+        "/911.32d1a543db207ec8.js",
+        "/997.3a54a3cf00cb167b.js",
+        "/index.html",
+        "/main.55311720520e68b6.js",
+        "/polyfills.008a1dbee7445001.js",
+        "/runtime.5439b8da43d12cbe.js",
+        "/scripts.1f14a97e841fd5fc.js",
+        "/styles.354b9a7a7380d614.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/bootstrap-icons.154365acf3010d96.woff2",
+        "/bootstrap-icons.ac1a99b3d05d8232.woff"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/179.1c12e5a3a63a2194.js": "5000fd98fcfa6ea12cde5de71685b992cd131386",
+    "/205.9a8d596cd1080786.js": "9ca905fda8ce8835b559ffa45fc85994748c887b",
+    "/245.3f38b800011aabe7.js": "55ad090c7be2254c2b7df4b9d0c154eb5c97363c",
+    "/286.cb230bca6f56eb1b.js": "379bc26edd9b08b87a98c9681aa9a776861e27f7",
+    "/291.f56da12f524d400f.js": "16746f3e0a1c7e0a7c9c390e835c14d4e7d6a20e",
+    "/31.85c2bf4aa9b1711d.js": "e4aea8dd2feca3610ee582a90cb73f454a7f4172",
+    "/329.f329b52e745e935c.js": "c4edebc412e43cc7dda8c2bc220eaaebb432ed72",
+    "/341.a5eb91c15e196737.js": "ec87cd9362d7e6c05aeaaf5693012694d6a99f81",
+    "/365.3e7b5df9a7e26306.js": "a8ab1015939b551e958119e96e6c38849a012d28",
+    "/423.115685b37de49670.js": "5b514815d1d3a6f07086b926465122d17c2fef1c",
+    "/441.1280757b39cbb071.js": "036d61844dae99a264ee34337aa21afb92e07dc0",
+    "/466.9201f51d4a76cfc7.js": "62181dcb64520ee536df9ac2d68353f8887c7c8c",
+    "/507.5b2a4133694286d8.js": "8f86acaac7ad5039e8c6d0e1fa0a1c6300a8c437",
+    "/581.0d88de26f1288acd.js": "7b695fad1d9c5ce39bd1e4643b71ea000b404ece",
+    "/593.adff1b10591660d6.js": "4c8888e10a1ca88c1cebaee4c96b3e0dc7941231",
+    "/621.f481689c357811be.js": "448af6be4c0c9d4bd7045cf9de57b9b034f12377",
+    "/703.6161be63a8dbf1df.js": "4fb51e92ae7ea946cd612365e15d7f56eba8ae35",
+    "/73.9729b8de0c4ca797.js": "932a446e875ebc7ba194ff114da11f1b5505d114",
+    "/842.dbe5d78de3d28e52.js": "b7f5b1ae2b9f0adfb6e298c274f29ee9f108a183",
+    "/85.7365945367bb2939.js": "3ed2a501f510d147d7a10fcbed8440fe52345430",
+    "/873.284527a641fb15eb.js": "cccdcf6119e60cc6d8bdefed2aa7960a5cca2e7f",
+    "/885.2c6296a9c5482678.js": "f1567e29aaa62cd70682b94cf93a6a22b59935f7",
+    "/905.d4329688f50f46a9.js": "9f3c5c2e35581aae0d3bc51276f5288361d44ba6",
+    "/911.32d1a543db207ec8.js": "587779a8e81c207b4125cbe99c890b585e7f0356",
+    "/997.3a54a3cf00cb167b.js": "f2dbd817d02ac615034214260e6a90987e6571bd",
+    "/bootstrap-icons.154365acf3010d96.woff2": "b441fcff939e24fa0906a37b7788788b9fddbb68",
+    "/bootstrap-icons.ac1a99b3d05d8232.woff": "762010c79b4a05e1131fc8fb3b1aeff324d8033f",
+    "/index.html": "883ce2648f2286accd20e317602f0771a8b77b6c",
+    "/main.55311720520e68b6.js": "3f7b7f5e461ba2c7c747bcb98d5da2b8941a865b",
+    "/polyfills.008a1dbee7445001.js": "3bb110019784c462cdfb3671a5f9404cf3800db1",
+    "/runtime.5439b8da43d12cbe.js": "dfb6649ac64ce255c7db81fb01d28632e1822b56",
+    "/scripts.1f14a97e841fd5fc.js": "1e7766718d9874f1cacdf5fb14d5620f07680ccb",
+    "/styles.354b9a7a7380d614.css": "681d3933345233431ef0e0049b414ded1a4d599c"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}

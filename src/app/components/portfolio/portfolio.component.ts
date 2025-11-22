@@ -12,6 +12,9 @@ interface StudentProject {
   reviewer?: string;
   feedback?: string;
   grade?: number;
+  knowledgeArea?: string;
+  objectives?: string;
+  summary?: string;
 }
 
 @Component({
@@ -22,49 +25,82 @@ interface StudentProject {
   styleUrl: './portfolio.component.scss'
 })
 export class PortfolioComponent implements OnInit {
-  studentProjects: StudentProject[] = [
-    {
-      id: '1',
-      title: 'Sistema de Gestión Académica con IA',
-      status: 'under_review',
-      submittedDate: new Date('2024-01-15'),
-      lastUpdate: new Date('2024-01-15'),
-      reviewer: 'Dra. María López'
-    },
-    {
-      id: '2', 
-      title: 'Plataforma E-learning Adaptativa',
-      status: 'approved',
-      submittedDate: new Date('2023-11-20'),
-      lastUpdate: new Date('2023-12-10'),
-      reviewer: 'Dr. Roberto Fernández',
-      grade: 4.8
-    },
-    {
-      id: '3',
-      title: 'App Móvil para Control de Asistencia',
-      status: 'corrections_required',
-      submittedDate: new Date('2024-01-10'),
-      lastUpdate: new Date('2024-01-18'),
-      reviewer: 'Dra. María López',
-      feedback: 'Falta especificar la metodología de desarrollo y justificar la selección de tecnologías.'
-    },
-    {
-      id: '4',
-      title: 'Análisis de Datos Educativos',
-      status: 'draft',
-      submittedDate: new Date('2024-01-05'),
-      lastUpdate: new Date('2024-01-05')
-    }
-  ];
-
+  studentProjects: StudentProject[] = [];
+  
   filteredProjects: StudentProject[] = [];
   filterStatus: string = 'all';
   sortOrder: 'recent' | 'oldest' = 'recent';
 
   ngOnInit() {
-    this.sortProjects();
-    this.filterProjects();
+    this.loadProjectsFromStorage();
+  }
+
+  loadProjectsFromStorage() {
+    try {
+      console.log('��� Cargando proyectos desde localStorage...');
+      
+      const savedProjects = localStorage.getItem('studentProjects');
+      console.log('��� Datos en localStorage:', savedProjects);
+      
+      if (savedProjects) {
+        const projectsFromStorage: StudentProject[] = JSON.parse(savedProjects);
+        console.log('��� Proyectos parseados:', projectsFromStorage);
+        
+        projectsFromStorage.forEach(project => {
+          project.submittedDate = new Date(project.submittedDate);
+          project.lastUpdate = new Date(project.lastUpdate);
+        });
+
+        this.studentProjects = projectsFromStorage;
+        console.log('✅ Proyectos cargados exitosamente:', this.studentProjects.length);
+      } else {
+        console.log('ℹ️ No hay proyectos guardados en localStorage');
+        this.studentProjects = [];
+      }
+
+      if (this.studentProjects.length === 0) {
+        console.log('➕ Agregando proyectos de ejemplo');
+        this.studentProjects = this.getExampleProjects();
+      }
+      
+      this.sortProjects();
+      this.filterProjects();
+      
+    } catch (error) {
+      console.error('❌ Error cargando proyectos:', error);
+      this.studentProjects = this.getExampleProjects();
+      this.sortProjects();
+      this.filterProjects();
+    }
+  }
+
+  private getExampleProjects(): StudentProject[] {
+    return [
+      {
+        id: '1',
+        title: 'Sistema de Gestión Académica con IA',
+        status: 'under_review',
+        submittedDate: new Date('2024-01-15'),
+        lastUpdate: new Date('2024-01-15'),
+        reviewer: 'Dra. María López'
+      },
+      {
+        id: '2', 
+        title: 'Plataforma E-learning Adaptativa',
+        status: 'approved',
+        submittedDate: new Date('2023-11-20'),
+        lastUpdate: new Date('2023-12-10'),
+        reviewer: 'Dr. Roberto Fernández',
+        grade: 4.8
+      },
+      {
+        id: '3',
+        title: 'App Móvil para Control de Asistencia',
+        status: 'draft',
+        submittedDate: new Date('2024-01-10'),
+        lastUpdate: new Date('2024-01-18')
+      }
+    ];
   }
 
   sortProjects() {
@@ -89,6 +125,7 @@ export class PortfolioComponent implements OnInit {
         project.status === this.filterStatus
       );
     }
+    console.log('��� Proyectos filtrados:', this.filteredProjects.length);
   }
 
   get totalProjectsCount(): number {
@@ -143,16 +180,16 @@ export class PortfolioComponent implements OnInit {
     return `Hace ${diffDays} días`;
   }
 
-  loadProjectsFromStorage() {
-    try {
-      const savedProjects = localStorage.getItem('studentProjects');
-      if (savedProjects) {
-        const parsedProjects = JSON.parse(savedProjects);
-        this.studentProjects = [...this.studentProjects, ...parsedProjects];
-        this.sortProjects();
-      }
-    } catch (error) {
-      console.error('Error loading projects from storage:', error);
+  refreshProjects() {
+    console.log('��� Recargando proyectos...');
+    this.loadProjectsFromStorage();
+  }
+
+  clearProjects() {
+    if (confirm('¿Estás seguro de que quieres limpiar todos los proyectos? Esto es solo para testing.')) {
+      localStorage.removeItem('studentProjects');
+      this.loadProjectsFromStorage();
+      console.log('���️ Todos los proyectos eliminados');
     }
   }
 }
